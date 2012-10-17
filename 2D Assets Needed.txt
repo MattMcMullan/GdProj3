@@ -1,0 +1,14 @@
+Gerald, please make these:
+
+-HUD Sprites (Ball, Trap1, Trap2)
+-Menu Buttons (Start, Instructions, Options, Exit)
+-HUD Backgrounds (think TF2 behind the numbers)
+--Text is cyan, so consider that when making the backgrounds.
+
+Please make the HUD sprites as a square .png file.
+
+We also need some planes in Maya... I think.  The plane used for the icons currently seems to be a square.  So, we need planes in the same shape as the buttons and backgrounds.
+
+Also, please make sure to include transparency.
+
+You can delete this file once all tasks are complete.
