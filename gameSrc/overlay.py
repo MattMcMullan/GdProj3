@@ -3,7 +3,7 @@ from pandac.PandaModules import *
 from direct.gui.OnscreenText import OnscreenText
 from direct.gui.OnscreenImage import OnscreenImage
 from direct.showbase.DirectObject import DirectObject
-from panda3d.core import CollisionRay,CollisionNode,GeomNode,CollisionTraverser,CollisionHandlerEvent
+from panda3d.core import TransparencyAttrib
 from direct.task.Task import Task
 import sys
 
@@ -19,6 +19,7 @@ class Overlay():
         self.percentDisplay = OnscreenText(text = "%s %s" % (self.momPercent, "%"), fg = (0,1,1,1), pos = (-1.05, -.9), scale = .125, font = self.font)
         self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[self.wepCounter]), fg = (0,1,1,1), pos = (1, -.9), scale = .125, font = self.font)
         self.wepIcon = OnscreenImage(image = "weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
+        self.wepIcon.setTransparency(TransparencyAttrib.MAlpha)
         
         #self.wepIcon.setTag("myObjectTag", '1')
 
@@ -50,6 +51,7 @@ class Overlay():
             self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[self.wepCounter]), fg = (0,1,1,1), pos = (1, -.9), scale = .125, font = self.font)
             self.wepIcon.remove()
             self.wepIcon = OnscreenImage(image = "weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
+            self.wepIcon.setTransparency(TransparencyAttrib.MAlpha)
             #self.wepIcon.setTag("myObjectTag", '1')
             self.keys["swap-up"] = 0
         if self.keys["swap-down"]:
@@ -61,6 +63,7 @@ class Overlay():
             self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[self.wepCounter]), fg = (0,1,1,1), pos = (1, -.9), scale = .125, font = self.font)
             self.wepIcon.remove()
             self.wepIcon = OnscreenImage(image = "weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
+            self.wepIcon.setTransparency(TransparencyAttrib.MAlpha)
             #self.wepIcon.setTag("myObjectTag", '1')
             self.keys["swap-down"] = 0
 
