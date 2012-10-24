@@ -4,7 +4,7 @@ import sys
 class Menu():
     def __init__(self, parent):
         
-        self.startButton = DirectButton(image = "start01 - off.png", image_scale = (1, 1, .2), relief = None, command = self.clicked)
+        self.startButton = DirectButton(image = "start01 - on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, .6), relief = None, command = self.clicked)
         self.gameStart = 0
         
     def clicked(self):
