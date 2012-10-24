@@ -17,6 +17,7 @@ import math,sys
 import ConfigParser
 from math import sin
 from math import cos
+import objects
 
 import collision, lights, edit, overlay, menu
 from createcube import createCube
@@ -126,7 +127,7 @@ class Mover():
         self.parent.segway.setY(self.parent.player.getY()-cos(deg2Rad(camera.getH()+180)))
         
         return Task.cont
-    
+
 class World(DirectObject):
     global traverser, queue
     def __init__(self):
@@ -186,7 +187,13 @@ class World(DirectObject):
         self.playerCnode = pc
         self.player.setPos(0,0,1)
         
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/arena proto.egg")
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/zzzzzzzzzarena proto spawn tests.egg")
+        print self.env.ls()
+        objects.loadPlayers(self.env)
+        objects.loadTrapAs(self.env)
+        objects.loadTrapBs(self.env)
+        objects.loadAmmo(self.env)
+        print self.env.ls()
         
         self.segway = collision.loadAndPositionModelFromFile("bestvehicle",scale=.07,show=0)
         self.segway.node().getChild(0).removeChild(0)
