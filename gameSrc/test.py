@@ -154,6 +154,7 @@ class World(DirectObject):
         self.accept("escape",sys.exit)
                 
         self.overlay = overlay.Overlay(self)
+        self.ball = ball.Ball(self)
 
         self.onRay = list()
         self.offRay = list()
