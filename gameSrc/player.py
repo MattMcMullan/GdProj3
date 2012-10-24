@@ -10,4 +10,6 @@ import collision
 
 class Player():
     def __init__(self,ppos):
-        self.model = collision.loadAndPositionModelFromFile("spikeyplant.egg",pos=ppos)
+        self.model = collision.loadAndPositionModelFromFile("player_temp.egg",pos=ppos)
+
+        
