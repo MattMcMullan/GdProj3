@@ -28,12 +28,13 @@ class Human():
         self.parent = parent
         #self.human = self.parent.human
         
-        self.human = collision.loadAndPositionModelFromFile("bestvehicle",scale=.07,show=0)
+        self.human = collision.loadAndPositionModelFromFile("../assets/3d/testing assets/robot rig3.egg",scale=.07,show=0)
         self.human.node().getChild(0).removeChild(0)
         self.human.setH(camera.getH()+180)
         campos = self.human.getPos()
         campos[2] = campos[2]-5
         camera.lookAt(campos)
+        print self.human.ls()
         
         pnode = ModelRoot("player")
         self.player = render.attachNewNode(pnode)
