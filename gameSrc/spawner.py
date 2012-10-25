@@ -10,4 +10,6 @@ import collision
 
 class Spawner():
 	def __init__(self,ppos,model):
-		self.physrep = collision.loadAndPositionModelFromFile(model,pos=ppos,scale=5)
+		self.model = model
+		self.physrep = model.createInstance(pos=ppos)
+		self.pos = ppos

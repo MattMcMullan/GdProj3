@@ -8,6 +8,7 @@ import math,sys
 
 from player import Player
 from spawner import Spawner
+from model import Model
 
 def extractPositions(env,prefix):
     positions = list()
@@ -27,20 +28,23 @@ def loadPlayers(env):
     return players
 
 def loadTrapAs(env):
+    model = Model("../assets/3d/Actors/beartrap1",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnTrapA"):
-        traps.append(Spawner(ppos,"../assets/3d/beartrap1"))
+        traps.append(Spawner(ppos,model))
     return traps
     
 def loadTrapBs(env):
+    model = Model("../assets/3d/Actors/claw1",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnTrapB"):
-        traps.append(Spawner(ppos,"../assets/3d/claw1"))
+        traps.append(Spawner(ppos,model))
     return traps
     
 def loadAmmo(env):
+    model = Model("GrassCube",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnAmmo"):
-        traps.append(Spawner(ppos,"GrassCube"))
+        traps.append(Spawner(ppos,model))
     return traps
     

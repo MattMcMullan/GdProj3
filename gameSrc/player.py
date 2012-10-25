@@ -7,9 +7,11 @@ from direct.task import Task #for update  functions
 import math,sys
 
 import collision
+from model import Model
 
 class Player():
+    model = 0
     def __init__(self,ppos):
-        self.model = collision.loadAndPositionModelFromFile("player_temp.egg",pos=ppos)
-
-        
+        if not Player.model:
+            Player.model = Model("../assets/3d/testing assets/robot rig3.egg")
+        self.instance = Player.model.createInstance(pos=ppos)
