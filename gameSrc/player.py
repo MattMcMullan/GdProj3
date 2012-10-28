@@ -67,8 +67,8 @@ class Player():
         self.instance.setX(self.player.getX())
         self.instance.setY(self.player.getY())
         self.instance.setZ(self.player.getZ())
-        if self.id == 0:
-            print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
+        #if self.id == 0:
+        #    print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
         return task.cont
         
     def die(self,event):

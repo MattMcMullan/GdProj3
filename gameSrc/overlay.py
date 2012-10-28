@@ -26,7 +26,7 @@ class Overlay():
         #Define controls
         self.keys = {"swap-up": 0, "swap-down": 0, "m1": 0}
         parent.accept("escape", sys.exit)
-        parent.accept("mouse1", self.setKey, ["m1", 1])
+        #parent.accept("mouse1", self.setKey, ["m1", 1])
         parent.accept("wheel_up", self.setKey, ["swap-up", 1])
         parent.accept("wheel_down", self.setKey, ["swap-down", 1])
     

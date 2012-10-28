@@ -36,13 +36,14 @@ collisionHandler = collision.initializeCollisions()
 
 collision.setupMousePicker('mouseraycnode',collisionHandler)
 
+
 class World(DirectObject):
     global traverser, queue
     def __init__(self):
 
         #Note, this sort of breaks all game functionality.
         #Keep it commented out if you want to test the game properly.
-        startMenu = menu.Menu(self)
+        #startMenu = menu.Menu(self)
         
         self.configurePanda()
         camera.setPosHpr(0, -15, 0, 0, 0, 0) # x,y,z,heading, pitch, roll

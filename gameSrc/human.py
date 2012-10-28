@@ -11,7 +11,7 @@ import collision
 
 class Human():
     def __init__(self,parent):
-        self.keymap = {"left": 0, "right":0, "up":0,"down":0}
+        self.keymap = {"left": 0, "right":0, "up":0,"down":0, "m1":0}
         self.prevTime = 0
         # panda walk
         parent.accept("w",self.setKey,["up",1])
@@ -22,19 +22,22 @@ class Human():
         parent.accept("a-up",self.setKey,["left",0])
         parent.accept("d",self.setKey,["right",1])
         parent.accept("d-up",self.setKey,["right",0])
+        parent.accept("mouse1", self.setKey, ["m1",1])
+        
+        self.velocity = 0
+        self.dir = (0,0,0)
         
         taskMgr.add(self.fpMove,"moveTask")
         taskMgr.add(self.mouseTask, 'mouseTask')
         self.parent = parent
         #self.human = self.parent.human
-        
         self.human = collision.loadAndPositionModelFromFile("../assets/3d/testing assets/robot rig3.egg",scale=.07,show=0)
         self.human.node().getChild(0).removeChild(0)
         self.human.setH(camera.getH()+180)
         campos = self.human.getPos()
         campos[2] = campos[2]-5
         camera.lookAt(campos)
-        print self.human.ls()
+        #print self.human.ls()
         
         pnode = ModelRoot("player")
         self.player = render.attachNewNode(pnode)
@@ -48,38 +51,30 @@ class Human():
         self.human.setZ(self.player.getZ()-.5)
         #if not self.parent.editMode:
         camera.setPos(self.player.getPos()+(0,0,1))
-        #camera.setZ(self.parent.player.getZ()+1)
         
         self.prevTime = task.time
-        vertical = self.keymap["up"]+self.keymap["down"]
-        horizontal = self.keymap["left"]+self.keymap["right"]
-        if vertical==0 and horizontal==0:
-            return task.cont
-        direction = self.keymap["up"]-self.keymap["down"]
-        velocity = 150
-        vertical = vertical * velocity
-        horizontal = horizontal * velocity
         pos = self.player.getPos()
-        #pos[2] = pos[2]+1
-        h = deg2Rad(camera.getH())
-        p = deg2Rad(camera.getP())
+        if self.keymap["up"]:
+            self.velocity = self.velocity + 1
+            h = deg2Rad(camera.getH())
+            p = deg2Rad(camera.getP())
+            if self.velocity > 0:
+                self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+        if self.keymap["down"]:
+            self.velocity = self.velocity - 1
+            h = deg2Rad(camera.getH())
+            p = deg2Rad(camera.getP())
+            if self.velocity < 0:
+                self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+        if self.keymap["m1"]:
+            self.velocity = self.velocity - 100
+            h = deg2Rad(camera.getH())
+            p = deg2Rad(camera.getP())
+            if self.velocity < 0:
+                self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            self.keymap["m1"] = 0
         
-        #get the direction vector
-        dir = (-cos(p)*sin(h)*direction, cos(p)*cos(h)*direction, sin(p)*direction)
-        #get the modified direction from strafing
-        if self.keymap["left"]:
-            dx = sin(h-math.pi/2)
-            dy = cos(h-math.pi/2)
-            dir = (dir[0]+dx,dir[1]-dy,dir[2])
-        if self.keymap["right"]:
-            dx = sin(h+math.pi/2)
-            dy = cos(h+math.pi/2)
-            dir = (dir[0]+dx,dir[1]-dy,dir[2])
-        if horizontal:
-            len = math.sqrt(dir[0]*dir[0]+dir[1]*dir[1]+dir[2]*dir[2])
-            dir = (dir[0]/len,dir[1]/len,dir[2]/len)
-        #get the velocity
-        vel = (dir[0]*velocity,dir[1]*velocity,dir[2]*velocity)
+        vel = (self.dir[0]*self.velocity,self.dir[1]*self.velocity,self.dir[2]*self.velocity)
         #get displacement
         dis = (vel[0]*dt,vel[1]*dt,vel[2]*dt)
         #set the new position
@@ -106,8 +101,8 @@ class Human():
         # Save current position for next calculation 
         mousePrevPos = mousePos
         
-        camera.setP(camera.getP()+100*move[1])
-        camera.setH(camera.getH()-100*move[0])
+        camera.setP(camera.getP()+75*move[1])
+        camera.setH(camera.getH()-75*move[0])
         
         if self.parent.editMode:
             return Task.cont
