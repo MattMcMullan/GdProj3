@@ -86,7 +86,7 @@ class World(DirectObject):
         #self.env = collision.loadAndPositionModelFromFile("2012sphereenvironment")
         #self.panda = collision.loadAndPositionModelFromFile("panda-model",scale=.005,show=0)
         
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg")
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3")
         self.players = objects.loadPlayers(self.env)
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
