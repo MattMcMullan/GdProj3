@@ -93,8 +93,6 @@ class World(DirectObject):
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
         self.ammoSpawn = objects.loadAmmo(self.env)
-        objects.loadColBoxes(self.env)
-        print self.env.ls()
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
         #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
@@ -104,6 +102,9 @@ class World(DirectObject):
         #camera.reparentTo(self.player)
         print camera.getParent().getName()
     def setupCollisions(self):
+        self.pusher = CollisionHandlerPusher()
+        objects.loadColBoxes(self.env,self.pusher)
+        print self.env.ls()
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

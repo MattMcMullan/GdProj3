@@ -42,7 +42,7 @@ def loadTrapBs(env):
     return traps
     
 def loadAmmo(env):
-    model = Model("GrassCube",scale=5)
+    model = Model("../assets/3d/testing assets/GrassCube.egg",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnAmmo"):
         traps.append(Spawner(ppos,model))
@@ -59,7 +59,7 @@ def listNodes(env,prefix):
         nodes.append(node)
         index = index + 1
 
-def loadColBoxes(env):
+def loadColBoxes(env, handler):
     # traverse through the collision geometry
     for np in listNodes(env,"Collision_box_"):
         geom = np.node().getGeom(0)
@@ -81,5 +81,7 @@ def loadColBoxes(env):
         cbox = CollisionBox(vmin,vmax)
         cnode = CollisionNode("EnvCollide")
         cnode.addSolid(cbox)
-        env.node().getChild(0).addChild(cnode)
+        #env.node().getChild(0).addChild(cnode)
+        path = env.attachNewNode(cnode)
+        handler.addCollider(path,env)
     extractPositions(env,"collision_boxs_")
