@@ -13,14 +13,17 @@ class Menu():
         self.exitButton = DirectButton(image = "exit_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.8), relief = None, command = self.exitClicked)
 
     def startClicked(self):
-        self.startButton.remove()
-        self.rulesButton.remove()
-        self.optButton.remove()
-        self.exitButton.remove()
+        self.startButton.destroy()
+        self.rulesButton.destroy()
+        self.optButton.destroy()
+        self.exitButton.destroy()
         self.parent.beginGame()
         
     def rulesClicked(self):
-        print "rules click!"
+        self.startButton.destroy()
+        self.rulesButton.destroy()
+        self.optButton.destroy()
+        self.exitButton.destroy()
         
     def optClicked(self):
         print "options click!"
