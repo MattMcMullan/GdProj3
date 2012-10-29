@@ -19,7 +19,8 @@ class Player():
             Player.model = Model("../assets/3d/testing assets/robot rig3.egg")
         self.instance = Player.model.createInstance(pos=ppos)
         
-        self.prevTime = 0        
+        self.velocity = (0,0,0)
+        self.prevTime = 0
         taskMgr.add(self.fpMove,"moveTask")
         
         pnode = ModelRoot("player")
@@ -33,6 +34,12 @@ class Player():
          
         
     def fpMove(self,task):
+        #CONSTANTS
+        ACCELERATION =  0.8
+        MINDISTANCE =   150
+        MAXSPEED =      100
+        
+        #Function    
         dt = task.time-self.prevTime
         self.instance.setZ(self.instance.getZ())
         
@@ -50,20 +57,19 @@ class Player():
         angle2 = ( atan2(-vector2Target[2],sqrt(pow(vector2Target[1], 2) + pow(vector2Target[0], 2)))*180 / math.pi )
         self.instance.setH(angle)
         self.instance.setP(angle2)
-        velocity = 150.0
-        #Use Distance formula, if further than 10, keep moving, otherwise stop 
+        #curSpeed = sqrt(pow(self.velocity[0],2)+pow(self.velocity[1],2)+pow(self.velocity[2],2))
+        #Use Distance formula, if further than MINDISTANCE, keep moving, otherwise stop 
         distance = sqrt(pow(target.getX()-self.instance.getX(),2)+pow(target.getY()-self.instance.getY(),2)+pow(target.getZ()-self.instance.getZ(),2))
-        if(distance<100):
-            velocity = 0
+        if(distance<MINDISTANCE):
+            ACCELERATION = 0.0
         #get the velocity
-        vel = (velocity * vector2Target[0], velocity * vector2Target[1], velocity * vector2Target[2]) 
+        self.velocity = (self.velocity[0] + ACCELERATION * vector2Target[0], self.velocity[1] + ACCELERATION * vector2Target[1], self.velocity[2] + ACCELERATION * vector2Target[2]) 
+        self.velocity = (min(MAXSPEED,self.velocity[0]),min(MAXSPEED,self.velocity[1]),min(MAXSPEED,self.velocity[2]))
         #get displacement
-        dis = (vel[0]*dt,vel[1]*dt,vel[2]*dt)
+        dis = (self.velocity[0]*dt,self.velocity[1]*dt,self.velocity[2]*dt)
         #update position
         self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
-        self.instance.setX(self.player.getX())
-        self.instance.setY(self.player.getY())
-        self.instance.setZ(self.player.getZ())
+        self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
         if self.id == 0:
             print pos[0]+dis[0]
             print pos[1]+dis[1]
