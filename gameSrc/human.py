@@ -9,6 +9,9 @@ from math import sin
 from math import cos
 import collision
 
+mousePos       = [0,0] 
+mousePrevPos    = [0,0] 
+
 class Human():
     def __init__(self,parent):
         self.keymap = {"left": 0, "right":0, "up":0,"down":0, "m1":0}
