@@ -82,6 +82,12 @@ def loadColBoxes(env, handler):
         cnode = CollisionNode("EnvCollide")
         cnode.addSolid(cbox)
         #env.node().getChild(0).addChild(cnode)
-        path = env.attachNewNode(cnode)
+        path = env.find("").attachNewNode(cnode)
         handler.addCollider(path,env)
     extractPositions(env,"collision_boxs_")
+    envCollides = env.findAllMatches("**/EnvCollide")
+    for i in range(envCollides.getNumPaths()):
+        envCollide = envCollides.getPath(i)
+        envCollide.show()
+    print env.ls()
+    

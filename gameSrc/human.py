@@ -40,6 +40,17 @@ class Human():
         campos = self.human.getPos()
         campos[2] = campos[2]-5
         camera.lookAt(campos)
+        
+        vmin = LPoint3()
+        vmax = LPoint3()
+        self.human.calcTightBounds(vmin,vmax)
+        
+        cbox = CollisionBox(vmin,vmax)
+        cnode = CollisionNode("HumanCollide")
+        cnode.addSolid(cbox)
+        #env.node().getChild(0).addChild(cnode)
+        path = self.human.attachNewNode(cnode)
+        
         #print self.human.ls()
         
         pnode = ModelRoot("player")
@@ -116,6 +127,10 @@ class Human():
         
         return Task.cont
     def addCollisions(self,handler,name):
+        path = self.human.find("**/HumanCollide")
+        path.show()
+        handler.addCollider(path,self.human)
+        return
         paths = self.human.find_all_matches(name)
         for i in range(paths.getNumPaths()):
             path = paths.getPath(i)

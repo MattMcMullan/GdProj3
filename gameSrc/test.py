@@ -103,9 +103,15 @@ class World(DirectObject):
         print camera.getParent().getName()
     def setupCollisions(self):
         self.pusher = CollisionHandlerPusher()
+        self.pusher.addInPattern('%fn-into-%in')
+        self.pusher.addOutPattern('%fn-out-%in')
+        self.pusher.addAgainPattern('%fn-again-%in')
+        
         objects.loadColBoxes(self.env,self.pusher)
         #print self.env.ls()
         self.mover.addCollisions(self.pusher,"PlayerCollide")
+        
+        self.accept("PlayerCollide-into-EnvCollide",sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

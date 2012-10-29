@@ -10,7 +10,7 @@ import collision
 class Model():
 	def __init__(self, fname,scale=1):
 		self.modelRoot = collision.loadAndPositionModelFromFile(fname,scale,show=0)
-		print self.modelRoot.ls()
+		#print self.modelRoot.ls()
 	def createInstance(self,scale=1,pos=(0,0,0),hpr=(0,0,0),show=1):
 		nnode = render.attachNewNode("instance")
 		copy = self.modelRoot.instanceTo(nnode)
