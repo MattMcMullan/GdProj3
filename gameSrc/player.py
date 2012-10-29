@@ -40,26 +40,23 @@ class Player():
         target = camera
         targetPos = target.getPos()
         pos = self.instance.getPos()
+        vector2Target = self.normalize(targetPos - pos)
+        
         #notarget = 0
         #if notarget == 1:
         #    return task.cont
         #gogo trigonometry
-        angle = 90 + ( atan2(targetPos[1]-pos[1],targetPos[0]-pos[0])*180 / math.pi )
-        angle2 = 180 + ( atan2(targetPos[2]-pos[2],targetPos[1]-pos[1])*180 / math.pi )
+        angle = 90 + ( atan2(vector2Target[1],vector2Target[0])*180 / math.pi )
+        angle2 = ( atan2(-vector2Target[2],sqrt(pow(vector2Target[1], 2) + pow(vector2Target[0], 2)))*180 / math.pi )
         self.instance.setH(angle)
         self.instance.setP(angle2)
-        velocity = 0.80
+        velocity = 150.0
         #Use Distance formula, if further than 10, keep moving, otherwise stop 
         distance = sqrt(pow(target.getX()-self.instance.getX(),2)+pow(target.getY()-self.instance.getY(),2)+pow(target.getZ()-self.instance.getZ(),2))
-        if(distance<10 or distance>100):
+        if(distance<100):
             velocity = 0
-        #Set the direction based on the rotation (H) and pitch (P)
-        direction = -angle
-        h = deg2Rad(self.instance.getH())
-        p = deg2Rad(self.instance.getP())
-        dir = (-cos(p)*sin(h)*direction, cos(p)*cos(h)*direction, sin(p)*direction)
         #get the velocity
-        vel = (dir[0]*velocity,dir[1]*velocity,dir[2]*velocity)
+        vel = (velocity * vector2Target[0], velocity * vector2Target[1], velocity * vector2Target[2]) 
         #get displacement
         dis = (vel[0]*dt,vel[1]*dt,vel[2]*dt)
         #update position
@@ -67,10 +64,14 @@ class Player():
         self.instance.setX(self.player.getX())
         self.instance.setY(self.player.getY())
         self.instance.setZ(self.player.getZ())
-        #if self.id == 0:
-        #    print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
+        if self.id == 0:
+            print pos[0]+dis[0]
+            print pos[1]+dis[1]
+            print pos[2]+dis[2]
+            #print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
         return task.cont
-        
+    def normalize(self, vector):
+        return vector / sqrt(pow(vector[0],2) + pow(vector[1], 2) + pow(vector[2], 2))
     def die(self,event):
         base.cTrav.removeCollider(self.wheelsphere)
         self.instance.node().getChild(0).removeChild(0)
