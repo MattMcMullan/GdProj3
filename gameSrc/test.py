@@ -88,7 +88,7 @@ class World(DirectObject):
         #code!  So I must temporarily keep the old code here.
         self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/arena with collisions3')
-        self.env.ls()
+        #print self.env.ls()
         self.players = objects.loadPlayers(self.env)
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
@@ -104,7 +104,7 @@ class World(DirectObject):
     def setupCollisions(self):
         self.pusher = CollisionHandlerPusher()
         objects.loadColBoxes(self.env,self.pusher)
-        print self.env.ls()
+        #print self.env.ls()
         self.mover.addCollisions(self.pusher,"PlayerCollide")
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
