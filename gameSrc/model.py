@@ -30,4 +30,6 @@ class Model():
 		if (not show):
 			nnode.detachNode()
 		return nnode
-	
+	def addCollisions(self,handler,name):
+		paths = self.modelRoot.find_all_matches(name)
+		print type(paths)

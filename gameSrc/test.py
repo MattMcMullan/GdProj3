@@ -53,9 +53,9 @@ class World(DirectObject):
         self.editMode = False
         #world init
         self.loadModels()
+        self.mover = Human(self)
         self.setupLights()
         self.setupCollisions()
-        self.mover = Human(self)
         #self.initMove()
         self.accept("escape",sys.exit)
                 
@@ -105,6 +105,7 @@ class World(DirectObject):
         self.pusher = CollisionHandlerPusher()
         objects.loadColBoxes(self.env,self.pusher)
         print self.env.ls()
+        self.mover.addCollisions(self.pusher,"PlayerCollide")
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

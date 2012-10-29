@@ -115,6 +115,11 @@ class Human():
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
         
         return Task.cont
+    def addCollisions(self,handler,name):
+        paths = self.human.find_all_matches(name)
+        for i in range(paths.getNumPaths()):
+            path = paths.getPath(i)
+            handler.addCollider(path,self.human)
     def die(self,event):
         base.cTrav.removeCollider(self.wheelsphere)
         self.human.node().getChild(0).removeChild(0)
