@@ -89,12 +89,14 @@ class World(DirectObject):
         
         #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
         #code!  So I must temporarily keep the old code here.
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg")
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/arena with collisions3')
+        self.env.ls()
         self.players = objects.loadPlayers(self.env)
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
         self.ammoSpawn = objects.loadAmmo(self.env)
+        objects.loadColBoxes(self.env)
         print self.env.ls()
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
