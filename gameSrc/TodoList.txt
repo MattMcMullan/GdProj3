@@ -1,0 +1,19 @@
+
+Gameplay
+
+Assignment | Item
+-----------+----------------------------------------
+Matt       | Launch Projectiles
+           | Player Collisions with the Environment
+           | Spawner Logic
+Chris      | Player Movement
+           | 
+           | 
+
+AI
+
+Assignment | Item
+-----------+----------------------------------------
+           | 
+           | 
+           | 
