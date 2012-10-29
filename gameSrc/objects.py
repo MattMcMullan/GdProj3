@@ -66,29 +66,20 @@ def loadColBoxes(env):
         # get the minimum and maximum points
         vdata = geom.getVertexData()
         vertices = GeomVertexReader(vdata,'vertex')
-        xmin = -9999
-        ymin = -9999
-        zmin = -9999
-        xmax = 9999
-        ymax = 9999
-        zmax = 9999
+        mins = [-9999 for i in range(3)]
+        maxs = [9999 for i in range(3)]
         while not vertices.isAtEnd():
             vertex = vertices.getData3f()
-            xmin = min(xmin,vertex[0])
-            ymin = min(ymin,vertex[1])
-            zmin = min(zmin,vertex[2])
-            xmax = max(xmax,vertex[0])
-            ymax = max(ymax,vertex[1])
-            zmax = max(zmax,vertex[2])
+            mins = [min(mins[i], vertex[i]) for i in range(3)]
+            maxs = [max(maxs[i], vertex[i]) for i in range(3)]
         # get rid of the useless geometry
-        np.detachNode()
         np.removeNode()
         # use the points to construct collision boxes
-        vmin = LPoint3(xmin,ymin,zmin)
-        vmax = LPoint3(xmax,ymax,zmax)
+        vmin = LPoint3(mins[0],mins[1],mins[2])
+        vmax = LPoint3(maxs[0],maxs[1],maxs[2])
         
         cbox = CollisionBox(vmin,vmax)
         cnode = CollisionNode("EnvCollide")
         cnode.addSolid(cbox)
-        env.node().addChild(cnode)
+        env.node().getChild(0).addChild(cnode)
     extractPositions(env,"collision_boxs_")
