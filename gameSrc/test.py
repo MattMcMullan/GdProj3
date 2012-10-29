@@ -17,8 +17,9 @@ import math,sys
 import ConfigParser
 import objects
 from human import Human
+from menu import Menu
 
-import collision, lights, edit, overlay, menu
+import collision, lights, edit, overlay
 from createcube import createCube
 print len((1,2,3))
 
@@ -36,15 +37,13 @@ collisionHandler = collision.initializeCollisions()
 
 collision.setupMousePicker('mouseraycnode',collisionHandler)
 
-
 class World(DirectObject):
-    global traverser, queue
+    global traverser, queue, gameStart
     def __init__(self):
 
-        #Note, this sort of breaks all game functionality.
-        #Keep it commented out if you want to test the game properly.
-        #startMenu = menu.Menu(self)
-        
+        self.startMenu = Menu(self)
+            
+    def beginGame(self):
         self.configurePanda()
         camera.setPosHpr(0, -15, 0, 0, 0, 0) # x,y,z,heading, pitch, roll
         # list of instances
@@ -68,6 +67,7 @@ class World(DirectObject):
         self.onRay = list()
         self.offRay = list()
         self.activeRay = list()
+        
     def configurePanda(self):
         props = WindowProperties()
         props.setCursorHidden(True) 
