@@ -15,7 +15,7 @@ mousePrevPos    = [0,0]
 class Projectile():
     model = 0
     index = 0
-    def __init__(self, ppos, h, p, parentVel):
+    def __init__(self, ppos, h, p, parent, parentVel):
         if Projectile.model==0:
             Projectile.model = Model("../assets/3d/Actors/ball_proj1.egg")
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0))
@@ -23,18 +23,29 @@ class Projectile():
         self.vel = parentVel
         self.vel = map(lambda i: dir[i]*100, range(3))
         self.index = Projectile.index
+        self.parent = parent
         Projectile.index = Projectile.index + 1
         taskMgr.add(self.move,"Proj"+str(Projectile.index)+"MoveTask")
-        self.prevTime=0
+        self.prevTime = 0
+        self.lifeTime = 0
+        self.TIMEDLIFE = 120
     def move(self,task):
         dt = task.time-self.prevTime
-        #get the position
-        pos = self.instance.getPos()
-        #get the displacement
-        dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
-        #set the new position
-        self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
-        return task.cont
+        #If the projectile exceeds its maximum lifetime or burns out on the arena bounds -
+        self.lifeTime += dt
+        if(self.lifeTime >= self.TIMEDLIFE):
+            #kill projectile
+            self.instance.removeNode()
+            self.parent.projectiles.remove(self)
+            #print "Projectile removed"
+        if(self.lifeTime < self.TIMEDLIFE):
+            #get the position
+            pos = self.instance.getPos()
+            #get the displacement
+            dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
+            #set the new position
+            self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+            return task.cont
 class Human():
     def __init__(self,parent):
         self.projectiles = list()
@@ -120,7 +131,7 @@ class Human():
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
     def launch(self):
-        self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self.vel))
+        self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel))
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
