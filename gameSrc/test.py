@@ -88,7 +88,7 @@ class World(DirectObject):
         #code!  So I must temporarily keep the old code here. Who? We need to fix this.
         self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions4.egg")
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
-        #print self.env.ls()
+        print self.env.ls()
         self.players = objects.loadPlayers(self.env)
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
