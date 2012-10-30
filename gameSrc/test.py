@@ -117,10 +117,11 @@ class World(DirectObject):
         self.mover.addCollisions(collisionHandler,"body_coll")
         
         for i in range(1,72):
-            self.accept("spawner"+str(i)+"-into-body_coll",sys.exit)
+            self.accept("cody_coll-into-spawner"+str(i),sys.exit)
             self.accept("body_coll-into-Collision_box_"+str(i),sys.exit)
             self.accept("body_coll-out-Collision_box_"+str(i),sys.exit)
             self.accept("body_coll-again-Collision_box_"+str(i),sys.exit)
+            self.accept("ate-Collision_box_"+str(i),sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

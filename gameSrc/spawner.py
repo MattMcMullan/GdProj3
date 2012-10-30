@@ -19,7 +19,7 @@ class Spawner():
         spawnNode = CollisionNode("spawner" + str(Spawner.count))
         spawnNode.addSolid(spawnSphere)
         spawnNodePath = render.attachNewNode(spawnNode)
-        base.cTrav.addCollider(spawnNodePath,collisionHandler)
+        #base.cTrav.addCollider(spawnNodePath,collisionHandler)
         spawnNodePath.show()
         
         #taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
