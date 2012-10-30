@@ -70,10 +70,10 @@ class Player():
         #update position
         self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
         self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
-        if self.id == 0:
-            print pos[0]+dis[0]
-            print pos[1]+dis[1]
-            print pos[2]+dis[2]
+        #if self.id == 0:
+        #    print pos[0]+dis[0]
+        #    print pos[1]+dis[1]
+        #    print pos[2]+dis[2]
             #print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
         return task.cont
     def normalize(self, vector):

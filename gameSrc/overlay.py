@@ -28,6 +28,11 @@ class Overlay():
     
     def setKey(self, key, val): self.keys[key] = val
     
+    def changeAmmo(self, counter, val):
+        self.wepAmmo[counter] += val
+        self.wepDisplay.remove()
+        self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[counter]), fg = (0,1,1,1), pos = (1, -.9), scale = .125, font = self.font)
+    
     def guiLoop(self, task):
     
         #Scroll up and down to scroll through weapons

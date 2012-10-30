@@ -100,16 +100,21 @@ class Human():
         p = deg2Rad(camera.getP())
         if self.keymap["up"]:
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            print dir
             self.vel = map(lambda i: self.vel[i]+dir[i]*delta, range(3))
         if self.keymap["down"]:
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            print dir
             self.vel = map(lambda i: self.vel[i]-dir[i]*delta, range(3))
         if self.keymap["m1"]:
+            #if self.parent.overlay.wepAmmo[self.parent.overlay.wepCounter] > 0:
+            #    self.parent.overlay.changeAmmo(self.parent.overlay.wepCounter, -1)
             self.launch()
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            print dir
             #self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
             self.keymap["m1"] = 0
-        
+            
         #get displacement
         dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
         #set the new position
