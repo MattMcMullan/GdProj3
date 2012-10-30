@@ -91,15 +91,15 @@ class Human():
         campos[2] = campos[2]-5
         camera.lookAt(campos)
         
-        vmin = LPoint3()
-        vmax = LPoint3()
-        self.human.calcTightBounds(vmin,vmax)
+        #vmin = LPoint3()
+        #vmax = LPoint3()
+        #self.human.calcTightBounds(vmin,vmax)
         
-        cbox = CollisionBox(vmin,vmax)
-        cnode = CollisionNode("HumanCollide")
-        cnode.addSolid(cbox)
+        #cbox = CollisionBox(vmin,vmax)
+        #cnode = CollisionNode("HumanCollide")
+        #cnode.addSolid(cbox)
         #env.node().getChild(0).addChild(cnode)
-        path = self.human.attachNewNode(cnode)
+        #path = self.human.attachNewNode(cnode)
         
         #print self.human.ls()
         
@@ -182,6 +182,8 @@ class Human():
         path = self.human.find("**/"+name)
         print type(path.node().getSolid(0))
         path.show()
+        #newsolid = CollisionSphere(self.human.getPos(),20)
+        #newnode = self.human.
         base.cTrav.addCollider(path,handler)
         #Undo when un-event
         #handler.addCollider(path,self.human)
