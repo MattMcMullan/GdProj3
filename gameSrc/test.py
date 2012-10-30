@@ -93,6 +93,7 @@ class World(DirectObject):
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
         self.ammoSpawn = objects.loadAmmo(self.env)
+        #objects.loadSpotlights(self.env)
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
         #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))

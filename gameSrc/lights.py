@@ -48,11 +48,13 @@ def loadModelSpotlightByName(model,originName,targetName,newName,color=1,show=1)
     #find the origin node in the model
     origin = model.find("**/"+originName)
     if origin.getNumNodes()<1:
+        return 0
         print "\nERROR:\n\tFailed to find "+originName+" in "+model.getName()+"\n"
         return
     #find the target node in the model
     target = model.find("**/"+targetName)
     if target.getNumNodes()<1:
+        return 0
         print "\nERROR:\n\tFailed to find "+targetName+" in "+model.getName()+"\n"
         return
     #Create the spotlight
