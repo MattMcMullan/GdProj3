@@ -15,8 +15,8 @@ class Spawner():
         self.physrep = model.createInstance(pos=ppos)
         self.pos = ppos
         
-        spawnSphere + str(Spawner.count) = CollisionSphere((self.pos[0], self.pos[1], self.pos[2] + 13), 14)
-        spawnNode = CollisionNode("spawner")
+        spawnSphere = CollisionSphere((self.pos[0], self.pos[1], self.pos[2] + 13), 14)
+        spawnNode = CollisionNode("spawner" + str(Spawner.count))
         spawnNode.addSolid(spawnSphere)
         spawnNodePath = render.attachNewNode(spawnNode)
         spawnNodePath.show()
