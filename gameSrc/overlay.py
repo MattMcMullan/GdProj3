@@ -10,15 +10,15 @@ class Overlay():
         taskMgr.add(self.guiLoop, "guiLoop")
         
         #HUD
-        self.font = loader.loadFont("Orbitron Light.otf")
+        self.font = loader.loadFont("../assets/font/Orbitron Light.otf")
         self.momPercent = 100
         self.wepCounter = 0
         self.wepAmmo = [100, 100, 100]
-        self.lefthudback = OnscreenImage(image = "hudback.png", pos = (-1.05, 0, -.9), scale=(.3,1,.2))
-        self.righthudback = OnscreenImage(image = "hudbackR.png", pos = (1.05, 0, -.9), scale=(.3,1,.2))
+        self.lefthudback = OnscreenImage(image = "../assets/2d/icons/hudback.png", pos = (-1.05, 0, -.9), scale=(.3,1,.2))
+        self.righthudback = OnscreenImage(image = "../assets/2d/icons/hudbackR.png", pos = (1.05, 0, -.9), scale=(.3,1,.2))
         self.percentDisplay = OnscreenText(text = "%s %s" % (self.momPercent, "%"), fg = (0,1,1,1), pos = (-1.05, -.9), scale = .125, font = self.font)
         self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[self.wepCounter]), fg = (0,1,1,1), pos = (.95, -.9), scale = .125, font = self.font)
-        self.wepIcon = OnscreenImage(image = "weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
+        self.wepIcon = OnscreenImage(image = "../assets/2d/icons/weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
         self.wepIcon.setTransparency(TransparencyAttrib.MAlpha)
 
         #Define controls
@@ -28,6 +28,7 @@ class Overlay():
     
     def setKey(self, key, val): self.keys[key] = val
     
+    #Called to add or remove ammo
     def changeAmmo(self, counter, val):
         self.wepAmmo[counter] += val
         self.wepDisplay.remove()
@@ -44,7 +45,7 @@ class Overlay():
             self.wepDisplay.remove()
             self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[self.wepCounter]), fg = (0,1,1,1), pos = (.95, -.9), scale = .125, font = self.font)
             self.wepIcon.remove()
-            self.wepIcon = OnscreenImage(image = "weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
+            self.wepIcon = OnscreenImage(image = "../assets/2d/icons/weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
             self.wepIcon.setTransparency(TransparencyAttrib.MAlpha)
             self.keys["swap-up"] = 0
         if self.keys["swap-down"]:
@@ -55,7 +56,7 @@ class Overlay():
             self.wepDisplay.remove()
             self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[self.wepCounter]), fg = (0,1,1,1), pos = (.95, -.9), scale = .125, font = self.font)
             self.wepIcon.remove()
-            self.wepIcon = OnscreenImage(image = "weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
+            self.wepIcon = OnscreenImage(image = "../assets/2d/icons/weapon%s.png" % (self.wepCounter), pos = (1.19, 0, -.875), scale=(.1,1,.1))
             self.wepIcon.setTransparency(TransparencyAttrib.MAlpha)
             self.keys["swap-down"] = 0
 
