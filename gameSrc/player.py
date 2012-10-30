@@ -84,7 +84,7 @@ class Player():
         self.projTime += dt
         if self.projTime >= THROWPERIOD:
             self.projTime -= THROWPERIOD
-            self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(180+angle),deg2Rad(180+angle2),self.velocity))
+            self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity))
         return task.cont
     def normalize(self, vector):
         return vector / sqrt(pow(vector[0],2) + pow(vector[1], 2) + pow(vector[2], 2))
