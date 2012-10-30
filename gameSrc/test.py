@@ -85,7 +85,7 @@ class World(DirectObject):
         #self.panda = collision.loadAndPositionModelFromFile("panda-model",scale=.005,show=0)
         
         #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
-        #code!  So I must temporarily keep the old code here.
+        #code!  So I must temporarily keep the old code here. Who? We need to fix this.
         self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
         #print self.env.ls()
