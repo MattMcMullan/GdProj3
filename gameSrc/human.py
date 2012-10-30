@@ -8,12 +8,37 @@ import math,sys
 from math import sin
 from math import cos
 import collision
+from model import Model
 
 mousePos       = [0,0] 
 mousePrevPos    = [0,0] 
-
+class Projectile():
+    model = 0
+    index = 0
+    def __init__(self, ppos, h, p, parentVel):
+        if Projectile.model==0:
+            Projectile.model = Model("../assets/3d/testing assets/GrassCube.egg")
+        self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0))
+        dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+        self.vel = parentVel
+        self.vel = map(lambda i: -dir[i]*100, range(3))
+        self.index = Projectile.index
+        Projectile.index = Projectile.index + 1
+        taskMgr.add(self.move,"Proj"+str(Projectile.index)+"MoveTask")
+        self.prevTime=0
+    def move(self,task):
+        dt = task.time-self.prevTime
+        #get the position
+        pos = self.instance.getPos()
+        #get the displacement
+        dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
+        #set the new position
+        self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        return task.cont
 class Human():
     def __init__(self,parent):
+        self.projectiles = list()
+        
         self.keymap = {"left": 0, "right":0, "up":0,"down":0, "m1":0}
         self.prevTime = 0
         # panda walk
@@ -80,6 +105,7 @@ class Human():
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
             self.vel = map(lambda i: self.vel[i]-dir[i]*delta, range(3))
         if self.keymap["m1"]:
+            self.launch()
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
             self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
             self.keymap["m1"] = 0
@@ -91,6 +117,8 @@ class Human():
         self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
+    def launch(self):
+        self.projectiles.append(Projectile(self.player.getPos(),camera.getH(),camera.getP(),self.vel))
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
@@ -112,9 +140,6 @@ class Human():
         
         camera.setP(camera.getP()+75*move[1])
         camera.setH(camera.getH()-75*move[0])
-        
-        if self.parent.editMode:
-            return Task.cont
         
         self.human.setH(camera.getH()+180)
         self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
