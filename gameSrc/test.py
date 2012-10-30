@@ -38,10 +38,10 @@ class World(DirectObject):
     global traverser, queue
     def __init__(self):
 
-        #Note, this sort of breaks all game functionality.
-        #Keep it commented out if you want to test the game properly.
-        #startMenu = menu.Menu(self)
-        
+        startMenu = menu.Menu(self)
+    
+    #Please do not remove this function, it makes the menu work.
+    def beginGame(self):
         self.configurePanda()
         camera.setPosHpr(0, -15, 0, 0, 0, 0) # x,y,z,heading, pitch, roll
         # list of instances
@@ -86,8 +86,8 @@ class World(DirectObject):
         
         #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
         #code!  So I must temporarily keep the old code here.
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
-        #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/arena with collisions3')
+        #self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
+        self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
         #print self.env.ls()
         self.players = objects.loadPlayers(self.env)
         self.aTrapSpawn = objects.loadTrapAs(self.env)
