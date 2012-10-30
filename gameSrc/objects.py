@@ -9,6 +9,7 @@ import math,sys
 from player import Player
 from spawner import Spawner
 from model import Model
+import lights
 
 def extractPositions(env,prefix):
     positions = list()
@@ -48,6 +49,12 @@ def loadAmmo(env):
         traps.append(Spawner(ppos,model))
     return traps
 
+def loadSpotlights(env):
+    index = 1
+    ret = 1
+    while not ret==0:
+        ret = lights.loadModelSpotlightByName(env,"SpotLight"+str(index),"DirLight"+str(index),"Light"+str(index))
+        index = index + 1
 
 def listNodes(env,prefix):
     nodes = list()
