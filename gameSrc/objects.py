@@ -43,7 +43,7 @@ def loadTrapBs(env, collisionHandler):
     return traps
     
 def loadAmmo(env, collisionHandler):
-    model = Model("../assets/3d/Actors/ball_proj2.egg",scale=5)
+    model = Model("../assets/3d/Actors/ball_proj2",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnAmmo"):
         traps.append(Spawner(ppos,model, collisionHandler))
