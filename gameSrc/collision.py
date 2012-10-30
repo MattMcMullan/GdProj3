@@ -85,6 +85,7 @@ def loadModelCollisionsByName(model,name,newName="",show=1):
     collider.setPos(pos)
     collider.node().addSolid(colNode.node().getSolid(0))
     origin = colNode.node().getSolid(0).getCollisionOrigin()
+    colNode.detachNode()
     return collider
 
 pickerRay=0

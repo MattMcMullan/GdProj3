@@ -86,7 +86,7 @@ class World(DirectObject):
         
         #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
         #code!  So I must temporarily keep the old code here. Who? We need to fix this.
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arenaSemiWorking.egg")
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena collision type barrier.egg")
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
         print self.env.ls()
         self.players = objects.loadPlayers(self.env)
@@ -107,9 +107,10 @@ class World(DirectObject):
         self.pusher.addInPattern('%fn-into-%in')
         self.pusher.addOutPattern('%fn-out-%in')
         self.pusher.addAgainPattern('%fn-again-%in')
-        
-        objects.loadColBoxes(self.env,self.pusher)
-        #print self.env.ls()
+        for i in range(1,72):
+            colnp = collision.loadModelCollisionsByName(self.env,"Collision_box_"+str(i),"EnvCollide")
+        #objects.loadColBoxes(self.env,self.pusher)
+        print self.env.ls()
         self.mover.addCollisions(self.pusher,"PlayerCollide")
         
         self.accept("PlayerCollide-into-EnvCollide",sys.exit)
