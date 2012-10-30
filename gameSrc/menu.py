@@ -39,7 +39,7 @@ class Menu():
         self.line6 = OnscreenText(text = "W/S: Jet Forward/Backward", fg = (0,1,1,1), pos = (0, -.2), scale = .07, font = self.font)
         self.line7 = OnscreenText(text = "The more hits you take, the greater your momentum!", fg = (0,1,1,1), pos = (0, -.6), scale = .07, font = self.font)
         self.whichfrom = "rules"
-        self.backButton = DirectButton(image = "../assets/2d/buttons/back_on.png", image_scale = (.4,1,.1), image_pos = (-.9, 0, -.85), relief = None, command = self.backClicked)
+        self.backButton = DirectButton(image = "../assets/2d/buttons/back_on.png", image_scale = (.4,1,.1), image_pos = (-.9, 0, -.87), relief = None, command = self.backClicked)
         
     def optClicked(self):
         print "options click!"
