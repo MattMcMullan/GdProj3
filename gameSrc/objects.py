@@ -66,28 +66,36 @@ def loadColBoxes(env, handler):
         # get the minimum and maximum points
         vdata = geom.getVertexData()
         vertices = GeomVertexReader(vdata,'vertex')
-        mins = [-9999 for i in range(3)]
-        maxs = [9999 for i in range(3)]
-        while not vertices.isAtEnd():
-            vertex = vertices.getData3f()
-            mins = [min(mins[i], vertex[i]) for i in range(3)]
-            maxs = [max(maxs[i], vertex[i]) for i in range(3)]
+        # get the transform
+        transform = np.getTransform().getMat()
+        # init the mins and maxs
+        vmin = LPoint3()
+        vmax = LPoint3()
+        np.calcTightBounds(vmin,vmax)
+        #mins = [-9999 for i in range(3)]
+        #maxs = [9999 for i in range(3)]
+        #while not vertices.isAtEnd():
+        #    vertex = transform.xformVecGeneral(vertices.getData3f())
+        #    
+        #    mins = [min(mins[i], vertex[i]) for i in range(3)]
+        #    maxs = [max(maxs[i], vertex[i]) for i in range(3)]
         # get rid of the useless geometry
         np.removeNode()
         # use the points to construct collision boxes
-        vmin = LPoint3(mins[0],mins[1],mins[2])
-        vmax = LPoint3(maxs[0],maxs[1],maxs[2])
+        #vmin = LPoint3(mins[0],mins[1],mins[2])
+        #vmax = LPoint3(maxs[0],maxs[1],maxs[2])
         
         cbox = CollisionBox(vmin,vmax)
         cnode = CollisionNode("EnvCollide")
         cnode.addSolid(cbox)
         #env.node().getChild(0).addChild(cnode)
-        path = env.find("").attachNewNode(cnode)
+        path = env.attachNewNode(cnode)
         handler.addCollider(path,env)
     extractPositions(env,"collision_boxs_")
     envCollides = env.findAllMatches("**/EnvCollide")
     for i in range(envCollides.getNumPaths()):
         envCollide = envCollides.getPath(i)
         envCollide.show()
+        print "SHOWING!!!!!!!!!!!!!!!!!!!!!!!"
     print env.ls()
     

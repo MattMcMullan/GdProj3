@@ -21,7 +21,7 @@ class Projectile():
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0))
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
         self.vel = parentVel
-        self.vel = map(lambda i: -dir[i]*100, range(3))
+        self.vel = map(lambda i: dir[i]*100, range(3))
         self.index = Projectile.index
         Projectile.index = Projectile.index + 1
         taskMgr.add(self.move,"Proj"+str(Projectile.index)+"MoveTask")
@@ -107,7 +107,7 @@ class Human():
         if self.keymap["m1"]:
             self.launch()
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
-            self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
+            #self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
             self.keymap["m1"] = 0
         
         #get displacement

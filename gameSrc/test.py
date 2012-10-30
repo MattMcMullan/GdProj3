@@ -86,8 +86,8 @@ class World(DirectObject):
         
         #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
         #code!  So I must temporarily keep the old code here.
-        #self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
-        self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena with collisions3.egg")
+        #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
         #print self.env.ls()
         self.players = objects.loadPlayers(self.env)
         self.aTrapSpawn = objects.loadTrapAs(self.env)
