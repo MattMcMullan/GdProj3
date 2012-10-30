@@ -151,8 +151,10 @@ class Human():
     def addCollisions(self,handler,name):
         print self.human.ls()
         path = self.human.find("**/"+name)
+        #print path.node().getSolid(0).isExactType(CollisionSphere(LPoint3(0,0,0),1).getType())
         path.show()
-        handler.addCollider(path,self.human)
+        base.cTrav.addCollider(path,handler)
+        #handler.addCollider(path,self.human)
         return
         paths = self.human.find_all_matches(name)
         for i in range(paths.getNumPaths()):

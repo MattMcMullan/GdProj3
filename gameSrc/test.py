@@ -103,14 +103,15 @@ class World(DirectObject):
         #camera.reparentTo(self.player)
         print camera.getParent().getName()
     def setupCollisions(self):
-        self.pusher = CollisionHandlerPusher()
+        self.pusher = CollisionHandlerEvent()
         self.pusher.addInPattern('%fn-into-%in')
         self.pusher.addOutPattern('%fn-out-%in')
         self.pusher.addAgainPattern('%fn-again-%in')
         for i in range(1,72):
             colnp = collision.loadModelCollisionsByName(self.env,"Collision_box_"+str(i),"EnvCollide")
-            self.pusher.addCollider(colnp,self.env)
-        #objects.loadColBoxes(self.env,self.pusher)
+            base.cTrav.addCollider(colnp,self.pusher)
+            #self.pusher.addCollider(colnp,self.env)
+        objects.loadColBoxes(self.env,self.pusher)
         print self.env.ls()
         self.mover.addCollisions(self.pusher,"HumanCollide")
         
