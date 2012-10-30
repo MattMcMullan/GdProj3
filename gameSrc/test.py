@@ -122,7 +122,9 @@ class World(DirectObject):
             self.accept("body_coll-into-Collision_box_"+str(i),sys.exit)
             self.accept("body_coll-out-Collision_box_"+str(i),sys.exit)
             self.accept("body_coll-again-Collision_box_"+str(i),sys.exit)
-            self.accept("ate-Collision_box_"+str(i),sys.exit)
+            self.accept("PlayerCollide-into-Collision_box_"+str(i),sys.exit)
+            self.accept("PlayerCollide-out-Collision_box_"+str(i),sys.exit)
+            self.accept("PlayerCollide-again-Collision_box_"+str(i),sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

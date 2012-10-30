@@ -180,6 +180,7 @@ class Human():
     def addCollisions(self,handler,name):
         print self.human.ls()
         path = self.human.find("**/"+name)
+        path.node().setName("PlayerCollide")
         print type(path.node().getSolid(0))
         path.show()
         #newsolid = CollisionSphere(self.human.getPos(),20)
