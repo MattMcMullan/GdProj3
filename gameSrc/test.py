@@ -90,9 +90,9 @@ class World(DirectObject):
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
         print self.env.ls()
         self.players = objects.loadPlayers(self.env)
-        self.aTrapSpawn = objects.loadTrapAs(self.env)
-        self.bTrapSpawn = objects.loadTrapBs(self.env)
-        self.ammoSpawn = objects.loadAmmo(self.env)
+        self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler)
+        self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler)
+        self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler)
         objects.loadSpotlights(self.env)
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
