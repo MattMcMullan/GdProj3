@@ -123,8 +123,10 @@ class World(DirectObject):
         self.accept("PlayerCollide-out-EnvCollide",sys.exit)
         self.accept("PlayerCollide-again-EnvCollide",sys.exit)
         for i in range(1,72):
+            self.accept("spawner"+str(i)+"-into-PlayerCollide",sys.exit)
+            self.accept("PlayerCollide-into-spawner"+str(i),sys.exit)
             self.accept("spawner"+str(i)+"-into-body_coll",sys.exit)
-            self.accept("cody_coll-into-spawner"+str(i),sys.exit)
+            self.accept("body_coll-into-spawner"+str(i),sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()
