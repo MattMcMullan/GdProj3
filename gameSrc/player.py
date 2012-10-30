@@ -17,7 +17,8 @@ class Player():
     counter = 0
     def __init__(self,ppos):
         if not Player.model:
-            Player.model = Model("../assets/3d/testing assets/robot rig3.egg")
+            Player.model = Model("../assets/3d/Actors/robot_rig_basic_coll.egg")
+            Player.model.modelRoot.find("**/body_coll").show()
         self.instance = Player.model.createInstance(pos=ppos)
         
         self.velocity = (0,0,0)
