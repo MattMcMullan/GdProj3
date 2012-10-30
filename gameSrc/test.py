@@ -29,9 +29,9 @@ base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
 crosshair = OnscreenImage(image = 'crosshair.png', pos = (0, 0, 0.02),scale=(.003,1,.003))
 
 # set up the collision traverser
-collisionHandler = collision.initializeCollisions()
+#collisionHandler = collision.initializeCollisions()
 
-collision.setupMousePicker('mouseraycnode',collisionHandler)
+#collision.setupMousePicker('mouseraycnode',collisionHandler)
 
 
 class World(DirectObject):
@@ -103,15 +103,16 @@ class World(DirectObject):
         #camera.reparentTo(self.player)
         print camera.getParent().getName()
     def setupCollisions(self):
-        self.pusher = CollisionHandlerPusher()
+        base.cTrav.showCollisions(render)
+        self.pusher = CollisionHandlerEvent()
         self.pusher.addInPattern('%fn-into-%in')
         self.pusher.addOutPattern('%fn-out-%in')
         self.pusher.addAgainPattern('%fn-again-%in')
         for i in range(1,72):
             colnp = collision.loadModelCollisionsByName(self.env,"Collision_box_"+str(i),"EnvCollide")
-            base.cTrav.addCollider(colnp,self.pusher)
+            #base.cTrav.addCollider(colnp,self.pusher)
             #self.pusher.addCollider(colnp,self.env)
-        objects.loadColBoxes(self.env,self.pusher)
+        #objects.loadColBoxes(self.env,self.pusher)
         print self.env.ls()
         self.mover.addCollisions(self.pusher,"HumanCollide")
         

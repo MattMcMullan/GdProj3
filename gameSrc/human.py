@@ -84,8 +84,8 @@ class Human():
         taskMgr.add(self.mouseTask, 'mouseTask')
         self.parent = parent
         #self.human = self.parent.human
-        self.human = collision.loadAndPositionModelFromFile("../assets/3d/testing assets/robot rig3.egg",scale=.07,show=0)
-        self.human.node().getChild(0).removeChild(0)
+        self.human = collision.loadAndPositionModelFromFile("../assets/3d/Actors/robot_rig_basic_coll.egg",scale=.07,show=0)
+        #self.human.node().getChild(0).removeChild(0)
         self.human.setH(camera.getH()+180)
         campos = self.human.getPos()
         campos[2] = campos[2]-5
@@ -180,9 +180,10 @@ class Human():
     def addCollisions(self,handler,name):
         print self.human.ls()
         path = self.human.find("**/"+name)
-        #print path.node().getSolid(0).isExactType(CollisionSphere(LPoint3(0,0,0),1).getType())
+        print type(path.node().getSolid(0))
         path.show()
         base.cTrav.addCollider(path,handler)
+        #Undo when un-event
         #handler.addCollider(path,self.human)
         return
         paths = self.human.find_all_matches(name)
