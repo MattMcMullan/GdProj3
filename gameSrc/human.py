@@ -181,6 +181,7 @@ class Human():
         print self.human.ls()
         path = self.human.find("**/"+name)
         path.node().setName("PlayerCollide")
+        path = self.human.find("**/PlayerCollide")
         print type(path.node().getSolid(0))
         path.show()
         #newsolid = CollisionSphere(self.human.getPos(),20)
