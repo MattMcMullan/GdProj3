@@ -93,7 +93,7 @@ class World(DirectObject):
         self.aTrapSpawn = objects.loadTrapAs(self.env)
         self.bTrapSpawn = objects.loadTrapBs(self.env)
         self.ammoSpawn = objects.loadAmmo(self.env)
-        #objects.loadSpotlights(self.env)
+        objects.loadSpotlights(self.env)
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
         #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
@@ -109,11 +109,12 @@ class World(DirectObject):
         self.pusher.addAgainPattern('%fn-again-%in')
         for i in range(1,72):
             colnp = collision.loadModelCollisionsByName(self.env,"Collision_box_"+str(i),"EnvCollide")
+            self.pusher.addCollider(colnp,self.env)
         #objects.loadColBoxes(self.env,self.pusher)
         print self.env.ls()
-        self.mover.addCollisions(self.pusher,"PlayerCollide")
+        self.mover.addCollisions(self.pusher,"HumanCollide")
         
-        self.accept("PlayerCollide-into-EnvCollide",sys.exit)
+        self.accept("HumanCollide-into-EnvCollide",sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

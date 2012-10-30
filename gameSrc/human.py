@@ -149,7 +149,8 @@ class Human():
         
         return Task.cont
     def addCollisions(self,handler,name):
-        path = self.human.find("**/HumanCollide")
+        print self.human.ls()
+        path = self.human.find("**/"+name)
         path.show()
         handler.addCollider(path,self.human)
         return

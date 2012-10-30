@@ -78,7 +78,11 @@ def loadModelCollisionsByName(model,name,newName="",show=1):
         return 
     if newName=="":
         newName=name
-    collider = model.attachNewNode(CollisionNode(newName))
+    colNode.setName(newName)
+    if show:
+        colNode.show()
+    return colNode
+    #collider = colNode.getParent().attachNewNode(CollisionNode(newName))
     if show:
         collider.show()
     pos = colNode.getPos()
