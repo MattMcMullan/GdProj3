@@ -9,15 +9,22 @@ import math,sys
 import collision
 
 class Spawner():
-	count = 0
-	def __init__(self,ppos,model):
-		self.model = model
-		self.physrep = model.createInstance(pos=ppos)
-		self.pos = ppos
-		#taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
-		Spawner.count = Spawner.count + 1
-	def update(self, task):
-		if not self.physrep.getParent()==render:
-			print "DEAD!"
-		return task.cont
-	
+    count = 0
+    def __init__(self,ppos,model):
+        self.model = model
+        self.physrep = model.createInstance(pos=ppos)
+        self.pos = ppos
+        
+        spawnSphere + str(Spawner.count) = CollisionSphere((self.pos[0], self.pos[1], self.pos[2] + 13), 14)
+        spawnNode = CollisionNode("spawner")
+        spawnNode.addSolid(spawnSphere)
+        spawnNodePath = render.attachNewNode(spawnNode)
+        spawnNodePath.show()
+        
+        #taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
+        Spawner.count = Spawner.count + 1
+    def update(self, task):
+        if not self.physrep.getParent()==render:
+            print "DEAD!"
+        return task.cont
+    
