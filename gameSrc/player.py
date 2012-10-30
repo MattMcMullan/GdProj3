@@ -10,6 +10,7 @@ import time
 import collision
 import threading
 from model import Model
+from human import Projectile
 
 class Player():
     model = 0
@@ -23,6 +24,9 @@ class Player():
         self.prevTime = 0
         taskMgr.add(self.fpMove,"moveTask")
         
+        self.projectiles = list()
+        self.projTime = 0.0
+        
         pnode = ModelRoot("player")
         self.player = render.attachNewNode(pnode)
         pc = self.player.attachNewNode(CollisionNode("playerCollision"))
@@ -35,9 +39,10 @@ class Player():
         
     def fpMove(self,task):
         #CONSTANTS
-        ACCELERATION =  0.8
+        ACCELERATION =  0.6
         MINDISTANCE =   150
         MAXSPEED =      100
+        THROWPERIOD =   5.0
         
         #Function    
         dt = task.time-self.prevTime
@@ -52,6 +57,7 @@ class Player():
         #notarget = 0
         #if notarget == 1:
         #    return task.cont
+        
         #gogo trigonometry
         angle = 90 + ( atan2(vector2Target[1],vector2Target[0])*180 / math.pi )
         angle2 = ( atan2(-vector2Target[2],sqrt(pow(vector2Target[1], 2) + pow(vector2Target[0], 2)))*180 / math.pi )
@@ -74,7 +80,11 @@ class Player():
         #    print pos[0]+dis[0]
         #    print pos[1]+dis[1]
         #    print pos[2]+dis[2]
-            #print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
+        #    print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
+        self.projTime += dt
+        if self.projTime >= THROWPERIOD:
+            self.projTime -= THROWPERIOD
+            self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(180+angle),deg2Rad(180+angle2),self.velocity))
         return task.cont
     def normalize(self, vector):
         return vector / sqrt(pow(vector[0],2) + pow(vector[1], 2) + pow(vector[2], 2))
