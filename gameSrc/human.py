@@ -30,6 +30,8 @@ class Human():
         self.velocity = 0
         self.dir = (0,0,0)
         
+        self.vel = (0,0,0)
+        
         taskMgr.add(self.fpMove,"moveTask")
         taskMgr.add(self.mouseTask, 'mouseTask')
         self.parent = parent
@@ -68,29 +70,22 @@ class Human():
         
         self.prevTime = task.time
         pos = self.player.getPos()
+        delta = 10*dt
+        h = deg2Rad(camera.getH())
+        p = deg2Rad(camera.getP())
         if self.keymap["up"]:
-            self.velocity = self.velocity + 5*dt
-            h = deg2Rad(camera.getH())
-            p = deg2Rad(camera.getP())
-            if self.velocity > 0:
-                self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            self.vel = map(lambda i: self.vel[i]+dir[i]*delta, range(3))
         if self.keymap["down"]:
-            self.velocity = self.velocity - 5*dt
-            h = deg2Rad(camera.getH())
-            p = deg2Rad(camera.getP())
-            if self.velocity < 0:
-                self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            self.vel = map(lambda i: self.vel[i]-dir[i]*delta, range(3))
         if self.keymap["m1"]:
-            self.velocity = self.velocity - 100
-            h = deg2Rad(camera.getH())
-            p = deg2Rad(camera.getP())
-            if self.velocity < 0:
-                self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+            self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
             self.keymap["m1"] = 0
         
-        vel = (self.dir[0]*self.velocity,self.dir[1]*self.velocity,self.dir[2]*self.velocity)
         #get displacement
-        dis = (vel[0]*dt,vel[1]*dt,vel[2]*dt)
+        dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
         #set the new position
         self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
         self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
