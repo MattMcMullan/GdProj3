@@ -118,7 +118,7 @@ class Human():
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
     def launch(self):
-        self.projectiles.append(Projectile(self.player.getPos(),camera.getH(),camera.getP(),self.vel))
+        self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self.vel))
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
