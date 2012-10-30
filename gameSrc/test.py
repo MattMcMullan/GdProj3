@@ -103,7 +103,7 @@ class World(DirectObject):
         #camera.reparentTo(self.player)
         print camera.getParent().getName()
     def setupCollisions(self):
-        self.pusher = CollisionHandlerEvent()
+        self.pusher = CollisionHandlerPusher()
         self.pusher.addInPattern('%fn-into-%in')
         self.pusher.addOutPattern('%fn-out-%in')
         self.pusher.addAgainPattern('%fn-again-%in')
