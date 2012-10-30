@@ -17,7 +17,7 @@ class Projectile():
     index = 0
     def __init__(self, ppos, h, p, parentVel):
         if Projectile.model==0:
-            Projectile.model = Model("../assets/3d/testing assets/GrassCube.egg")
+            Projectile.model = Model("../assets/3d/Actors/ball_proj1.egg")
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0))
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
         self.vel = parentVel

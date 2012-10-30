@@ -43,7 +43,7 @@ def loadTrapBs(env):
     return traps
     
 def loadAmmo(env):
-    model = Model("../assets/3d/testing assets/GrassCube.egg",scale=5)
+    model = Model("../assets/3d/Actors/ball_proj1.egg",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnAmmo"):
         traps.append(Spawner(ppos,model))
