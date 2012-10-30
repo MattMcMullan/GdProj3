@@ -46,9 +46,21 @@ class Projectile():
             #set the new position
             self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
             return task.cont
+            
+class floatTrap():
+    model = 0
+    index = 0
+    def __init__(self, ppos):
+        if floatTrap.model==0:
+            floatTrap.model = Model("../assets/3d/Actors/beartrap2.egg")
+        self.instance = floatTrap.model.createInstance(pos=ppos,hpr=(0,0,0))
+        self.index = floatTrap.index
+        floatTrap.index = floatTrap.index + 1
+            
 class Human():
     def __init__(self,parent):
         self.projectiles = list()
+        self.floatTraps = list()
         
         self.keymap = {"left": 0, "right":0, "up":0,"down":0, "m1":0}
         self.prevTime = 0
@@ -116,11 +128,15 @@ class Human():
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
             self.vel = map(lambda i: self.vel[i]-dir[i]*delta, range(3))
         if self.keymap["m1"]:
-            if self.parent.overlay.wepAmmo[self.parent.overlay.wepCounter] > 0:
-                self.parent.overlay.changeAmmo(self.parent.overlay.wepCounter, -1)
-                self.launch()
-                dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
-            #self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
+            weapon = self.parent.overlay.wepCounter
+            if self.parent.overlay.wepAmmo[weapon] > 0:
+                self.parent.overlay.changeAmmo(weapon, -1)
+                if weapon == 0:
+                    self.launch()
+                    dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+                    self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
+                elif weapon == 1:
+                    self.placeFloatTrap()
             self.keymap["m1"] = 0
             
         #get displacement
@@ -132,6 +148,8 @@ class Human():
         return task.cont
     def launch(self):
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel))
+    def placeFloatTrap(self):
+        self.floatTraps.append(floatTrap(self.player.getPos()))        
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
