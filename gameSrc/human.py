@@ -62,20 +62,20 @@ class Human():
         
     def fpMove(self,task):
         dt = task.time-self.prevTime
-        self.human.setZ(self.player.getZ()-.5)
+        #self.human.setZ(self.player.getZ()-.5)
         #if not self.parent.editMode:
         camera.setPos(self.player.getPos()+(0,0,1))
         
         self.prevTime = task.time
         pos = self.player.getPos()
         if self.keymap["up"]:
-            self.velocity = self.velocity + 1
+            self.velocity = self.velocity + 5*dt
             h = deg2Rad(camera.getH())
             p = deg2Rad(camera.getP())
             if self.velocity > 0:
                 self.dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
         if self.keymap["down"]:
-            self.velocity = self.velocity - 1
+            self.velocity = self.velocity - 5*dt
             h = deg2Rad(camera.getH())
             p = deg2Rad(camera.getP())
             if self.velocity < 0:
