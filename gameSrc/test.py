@@ -114,9 +114,9 @@ class World(DirectObject):
             #self.pusher.addCollider(colnp,self.env)
         #objects.loadColBoxes(self.env,self.pusher)
         print self.env.ls()
-        self.mover.addCollisions(self.pusher,"HumanCollide")
+        self.mover.addCollisions(self.pusher,"body_coll")
         
-        self.accept("HumanCollide-into-EnvCollide",sys.exit)
+        self.accept("body_coll-into-EnvCollide",sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()
