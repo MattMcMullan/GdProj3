@@ -6,16 +6,35 @@ from direct.interval.IntervalGlobal import * #for compound intervals
 from direct.task import Task #for update  functions
 import math,sys
 
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletBoxShape
+from panda3d.bullet import BulletSphereShape
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletConvexHullShape
+from panda3d.bullet import BulletDebugNode
+
 import collision
 
 class Spawner():
     count = 0
-    def __init__(self,ppos,model,world):
+    def __init__(self,ppos,model,world, worldNP):
         self.model = model
         self.physrep = model.createInstance(pos=ppos)
         self.pos = ppos
         
-        
+        shape = BulletSphereShape(13)
+
+        np = worldNP.attachNewNode(BulletRigidBodyNode('Sphere'))
+        #np.node().setMass(1.0)
+        np.node().addShape(shape)
+        np.node().addShape(shape, TransformState.makePos(Point3(0, 1, 0)))
+        np.setPos(self.pos[0], self.pos[1], self.pos[2] + 14)
+        np.setCollideMask(BitMask32.allOn())
+
+        world.attachRigidBody(np.node())
+
+        self.sphere = np.node()
         
         # spawnSphere = CollisionSphere((self.pos[0], self.pos[1], self.pos[2] + 13), 14)
         # spawnNode = CollisionNode("spawner" + str(Spawner.count))

@@ -35,25 +35,25 @@ def loadPlayers(env):
         players.append(Player(ppos))
     return players
 
-def loadTrapAs(env, world):
+def loadTrapAs(env, world, worldNP):
     model = Model("../assets/3d/Actors/beartrap2",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnTrapA"):
-        traps.append(Spawner(ppos,model, world))
+        traps.append(Spawner(ppos,model, world, worldNP))
     return traps
     
-def loadTrapBs(env, world):
+def loadTrapBs(env, world, worldNP):
     model = Model("../assets/3d/Actors/claw1",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnTrapB"):
-        traps.append(Spawner(ppos,model,world))
+        traps.append(Spawner(ppos,model,world, worldNP))
     return traps
     
-def loadAmmo(env, world):
+def loadAmmo(env, world, worldNP):
     model = Model("../assets/3d/Actors/ball_proj2",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnAmmo"):
-        traps.append(Spawner(ppos,model,world))
+        traps.append(Spawner(ppos,model,world, worldNP))
     return traps
 
 def loadSpotlights(env):

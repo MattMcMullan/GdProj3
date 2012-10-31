@@ -123,9 +123,9 @@ class World(DirectObject):
         
         #Spawners
         collisionHandler=0
-        self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler)
-        self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler)
-        self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler)
+        self.aTrapSpawn = objects.loadTrapAs(self.env, self.world, self.worldNP)
+        self.bTrapSpawn = objects.loadTrapBs(self.env, self.world, self.worldNP)
+        self.ammoSpawn = objects.loadAmmo(self.env, self.world, self.worldNP)
     def setupLights(self):
         """loads initial lighting"""
         self.ambientLight = lights.setupAmbientLight()
