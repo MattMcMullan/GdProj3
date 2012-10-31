@@ -197,23 +197,6 @@ class Human():
         self.human.reparentTo(np)
         self.player.reparentTo(np)
         camera.reparentTo(self.human)
-    def addCollisions(self,handler,name):
-        print self.human.ls()
-        path = self.human.find("**/"+name)
-        path.node().setName("PlayerCollide")
-        path = self.human.find("**/PlayerCollide")
-        print type(path.node().getSolid(0))
-        path.show()
-        #newsolid = CollisionSphere(self.human.getPos(),20)
-        #newnode = self.human.
-        base.cTrav.addCollider(path,handler)
-        #Undo when un-event
-        #handler.addCollider(path,self.human)
-        return
-        paths = self.human.find_all_matches(name)
-        for i in range(paths.getNumPaths()):
-            path = paths.getPath(i)
-            handler.addCollider(path,self.human)
     def die(self,event):
         base.cTrav.removeCollider(self.wheelsphere)
         self.human.node().getChild(0).removeChild(0)
