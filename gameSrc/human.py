@@ -22,12 +22,17 @@ from panda3d.bullet import BulletCharacterControllerNode
 mousePos       = [0,0] 
 mousePrevPos    = [0,0] 
 class Projectile():
+    projectiles = list()
     model = 0
     index = 0
     def __init__(self, ppos, h, p, parent, parentVel, world, worldNP):
         self.world=world
         if Projectile.model==0:
             Projectile.model = Model("../assets/3d/Actors/ball_proj2.egg")
+        h = deg2Rad(camera.getH())
+        p = deg2Rad(camera.getP())
+        dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+        ppos = map(lambda i: ppos[i]+dir[i]*5, range(3))
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0),scale=3)
         
         self.dhpr = [random.random(),random.random(),random.random()]
@@ -46,7 +51,7 @@ class Projectile():
         self.sphere.addShape(shape)
         self.sphere.setDeactivationEnabled(False)
         self.np = worldNP.attachNewNode(self.sphere)
-        self.np.setPos(ppos)
+        self.np.setPos(LVecBase3f(ppos[0],ppos[1],ppos[2]))
         self.np.setCollideMask(BitMask32.allOn())
         world.attachGhost(self.sphere)
         
@@ -59,6 +64,7 @@ class Projectile():
         taskMgr.add(self.move,"Proj"+str(Projectile.index)+"MoveTask")
         self.prevTime = 0
         self.lifeTime = 0
+        Projectile.projectiles.append(self)
         self.TIMEDLIFE = 120
     def move(self,task):
         dt = task.time-self.prevTime
@@ -72,6 +78,7 @@ class Projectile():
             self.instance.removeNode()
             self.parent.projectiles.remove(self)
             self.world.removeGhost(self.sphere)
+            Projectile.projectiles.remove(self)
             #self.world.
             return
         if(self.lifeTime >= self.TIMEDLIFE):
@@ -79,6 +86,8 @@ class Projectile():
             self.instance.removeNode()
             self.parent.projectiles.remove(self)
             self.world.removeGhost(self.sphere)
+            Projectile.projectiles.remove(self)
+            return
             #print "Projectile removed"
         if(self.lifeTime < self.TIMEDLIFE):
             #get the position
