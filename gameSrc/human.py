@@ -25,130 +25,19 @@ from panda3d.bullet import BulletCharacterControllerNode
 mousePos       = [0,0] 
 mousePrevPos    = [0,0]
 
-class floatTrap():
-    traps = list()
-    model = 0
-    index = 0
-    def __init__(self, ppos, world, worldNP):
-        self.world = world
-        if floatTrap.model==0:
-            floatTrap.model = Model("../assets/3d/Actors/beartrap2.egg")
-        h = deg2Rad(camera.getH())
-        p = deg2Rad(camera.getP())
-        dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
-        npos = map(lambda i: ppos[i]+dir[i]*25, range(3))
-        self.instance = floatTrap.model.createInstance(pos=npos,hpr=(0,0,0))
-        self.index = floatTrap.index
-        
-        pmin = LPoint3()
-        pmax = LPoint3()
-        self.instance.calcTightBounds(pmin,pmax)
-        norm = pmin-pmax
-        self.off = (norm[0]*.5,norm[1]*.5,norm[2]*.5)
-        r = max(norm)
-        shape = BulletSphereShape(.7*r)
-        self.sphere = BulletGhostNode('TrapSphere')
-        self.sphere.addShape(shape)
-        self.sphere.setDeactivationEnabled(False)
-        self.np = worldNP.attachNewNode(self.sphere)
-        self.np.setPos(LVecBase3(npos[0],npos[1],npos[2]))
-        self.np.setCollideMask(BitMask32.allOn())
-        world.attachGhost(self.sphere)
-        
-        #taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
-        floatTrap.traps.append(self)
-        floatTrap.index = floatTrap.index + 1
-        #pos = self.instance.getPos()
-        #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
-    def kill(self):
-        floatTrap.traps.remove(self)
-        self.world.removeGhost(self.sphere)
-        self.instance.detachNode()
-    def check(self,contacts,human,players):
-        if len(contacts)>0:
-            contactObject = contacts[0].getNode0()
-            if contacts[0].getNode0().getName()=="TrapSphere":
-                contactObject = contacts[0].getNode1()
-            name = contactObject.getName()
-            print contactObject
-            if name==human.character.getName():
-                human.trap1()
-                self.kill()
-                return
-            for i in range(len(players)):
-                if name==players[i].character.getName():
-                    players[i].trap1()
-                    self.kill()
-                    return
-
-class clawTrap():
-    traps = list()
-    model = 0
-    index = 0
-    def __init__(self, world, worldNP):
-        self.failed = 1
-        self.world = world
-        if clawTrap.model==0:
-            clawTrap.model = Model("../assets/3d/Actors/claw3.egg")
-        h = deg2Rad(camera.getH())
-        p = deg2Rad(camera.getP())
-        dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
-        cpos = camera.getPos()
-        vec = map(lambda i: cpos[i]+dir[i]*200, range(3))
-        rayHit = world.rayTestClosest(cpos,LPoint3(vec[0],vec[1],vec[2]))
-        if not rayHit.hasHit():
-            return
-        npos = rayHit.getHitPos()
-        n = rayHit.getHitNormal()
-        print n
-        npos = map(lambda i: npos[i]+n[i]*5, range(3))
-        self.instance = clawTrap.model.createInstance(pos=npos,hpr=(-90*n.x,180*(n.z==1)+90*(abs(n.x)+n.y),0))
-        self.index = clawTrap.index
-        
-        pmin = LPoint3()
-        pmax = LPoint3()
-        self.instance.calcTightBounds(pmin,pmax)
-        norm = pmin-pmax
-        self.off = (norm[0]*.5,norm[1]*.5,norm[2]*.5)
-        r = max(norm)
-        shape = BulletSphereShape(.7*r)
-        self.sphere = BulletGhostNode('TrapSphere')
-        self.sphere.addShape(shape)
-        self.sphere.setDeactivationEnabled(False)
-        self.np = worldNP.attachNewNode(self.sphere)
-        self.np.setPos(LVecBase3(npos[0],npos[1],npos[2]))
-        self.np.setCollideMask(BitMask32.allOn())
-        world.attachGhost(self.sphere)
-        
-        #taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
-        clawTrap.traps.append(self)
-        clawTrap.index = clawTrap.index + 1
-        self.failed = 0
-        #pos = self.instance.getPos()
-        #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
-    def kill(self):
-        clawTrap.traps.remove(self)
-        self.world.removeGhost(self.sphere)
-        self.instance.detachNode()
-    def check(self,contacts,human,players):
-        if len(contacts)>0:
-            contactObject = contacts[0].getNode0()
-            if contacts[0].getNode0().getName()=="TrapSphere":
-                contactObject = contacts[0].getNode1()
-            name = contactObject.getName()
-            print contactObject
-            if name==human.character.getName():
-                human.trap2()
-                self.kill()
-                return
-            for i in range(len(players)):
-                if name==players[i].character.getName():
-                    players[i].trap2()
-                    self.kill()
-                    return
-            
 class Human():
     def __init__(self,parent, world, worldNP):
+        """__init__
+        parameters:
+            self
+            parent: the World object
+            world: bullet world
+            worldNP: where in the world to put it
+        returns:
+            none
+        Description:
+            Create the human player
+        """
         self.traptime = 0
         self.world = world
         self.worldNP = worldNP
@@ -194,18 +83,6 @@ class Human():
         campos[2] = campos[2]-5
         camera.lookAt(campos)
         
-        #vmin = LPoint3()
-        #vmax = LPoint3()
-        #self.human.calcTightBounds(vmin,vmax)
-        
-        #cbox = CollisionBox(vmin,vmax)
-        #cnode = CollisionNode("HumanCollide")
-        #cnode.addSolid(cbox)
-        #env.node().getChild(0).addChild(cnode)
-        #path = self.human.attachNewNode(cnode)
-        
-        #print self.human.ls()
-        
         pnode = ModelRoot("player")
         self.player = render.attachNewNode(pnode)
         pc = self.player.attachNewNode(CollisionNode("playerCollision"))
@@ -214,7 +91,40 @@ class Human():
         self.player.setPos(0,0,1)
         #self.human.play('idle')
         self.human.loop('idle')
+    def bulletInit(self,world,pos):
+        """bulletInit
+        parameters:
+            self
+            task: the tskMgr structure
+        returns:
+            none
+        Description:
+            The rest of init requires bullet things
+        """
+        oldpath = self.human.find("**/body_coll")
+        self.shape = BulletSphereShape(10)#oldpath.node().getSolid(0).getRadius())
+        self.character = BulletCharacterControllerNode(self.shape, 0.4, 'Human')
+        self.characterNP = render.attachNewNode(self.character)
+        self.characterNP.setPos(pos[0],pos[1],pos[2])
+        self.character.setGravity(0)
+        #self.human.setPos(pos)
+        self.human.reparentTo(self.characterNP)
+        self.human.hide()
+        #self.player.setPos(pos)
+        self.player.reparentTo(self.characterNP)
+        self.characterNP.setCollideMask(BitMask32.allOn())
+        
+        world.attachCharacter(self.character)
     def fpMove(self,task):
+        """fpMove
+        parameters:
+            self
+            task: the taskMgr structure
+        returns:
+            none
+        Description:
+            player movement
+        """
         dt = task.time-self.prevTime
         camera.setPos(self.player.getPos()+(0,0,1))
         damp = (1.-(.2*dt))
@@ -229,6 +139,7 @@ class Human():
         delta = 10*dt
         h = deg2Rad(camera.getH())
         p = deg2Rad(camera.getP())
+        # player control
         if self.keymap["up"] and self.traptime<=0:
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
             self.vel = map(lambda i: self.vel[i]+dir[i]*delta, range(3))
@@ -259,16 +170,49 @@ class Human():
         #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
     def launch(self):
+        """launch
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Fire a projectile
+        """
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel, self.world, self.worldNP))
     def placeFloatTrap(self):
+        """placeFloatTrap
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Place a float trap
+        """
         self.floatTraps.append(floatTrap(self.player.getPos(),self.world,self.worldNP)) 
     def placeClawTrap(self):
+        """placeClawTrap
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Place a claw trap
+        """
         trap = clawTrap(self.world,self.worldNP)
         weapon = self.parent.overlay.wepCounter
         self.parent.overlay.changeAmmo(weapon, trap.failed)
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
+        """mouseTask
+        parameters:
+            self
+            task: the tskMgr structure
+        returns:
+            none
+        Description:
+            Keep track of the mouse and record its movement
+        """
         global mousePos, mousePrevPos 
         
         if (not base.mouseWatcherNode.hasMouse() ): return Task.cont
@@ -301,42 +245,43 @@ class Human():
                 self.vel = map(lambda x: x*.9, self.vel)
         
         return Task.cont
-    def bulletInit(self,world,pos):
-        oldpath = self.human.find("**/body_coll")
-        self.shape = BulletSphereShape(10)#oldpath.node().getSolid(0).getRadius())
-        self.character = BulletCharacterControllerNode(self.shape, 0.4, 'Human')
-        self.characterNP = render.attachNewNode(self.character)
-        self.characterNP.setPos(pos[0],pos[1],pos[2])
-        self.character.setGravity(0)
-        #self.human.setPos(pos)
-        self.human.reparentTo(self.characterNP)
-        self.human.hide()
-        #self.player.setPos(pos)
-        self.player.reparentTo(self.characterNP)
-        self.characterNP.setCollideMask(BitMask32.allOn())
-        
-        world.attachCharacter(self.character)
-        #node = BulletRigidBodyNode('PlayerCollide')
-        #node.setMass(1.0)
-        #node.addShape(shape)
-        #np = render.attachNewNode(node)
-        #np.setPos(0,0,-2)
-        #world.attachRigidBody(node)
-        #self.human.reparentTo(np)
-        #self.player.reparentTo(np)
-        #camera.reparentTo(self.human)
     def die(self,event):
-        base.cTrav.removeCollider(self.wheelsphere)
+        """die
+        parameters:
+            self
+            task: the tskMgr structure
+        returns:
+            none
+        Description:
+            Kill the player
+        """
+        #base.cTrav.removeCollider(self.wheelsphere)
         self.human.node().getChild(0).removeChild(0)
         self.filters.setInverted()
         print "You Died!"
     def trap1(self):
+        """trap1
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Inflict the floating trap penalty
+        """
         self.vel = map(lambda x: x*.25, self.vel)
         self.traptime = self.traptime + 20
         return
     def trap2(self):
+        """trap2
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Inflict the claw trap penalty
+        """
         self.vel = (0,0,0)
-        self.traptime = self.traptime + 20
+        self.traptime = self.traptime + 30
         return
     def impact(self,vel):
         diff = map(lambda i: self.vel[i]-vel[i], range(3))
