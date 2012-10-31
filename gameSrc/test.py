@@ -13,6 +13,15 @@ from panda3d.bullet import BulletWorld
 from direct.filter.CommonFilters import CommonFilters
 from direct.gui.OnscreenText import OnscreenText
 from direct.gui.OnscreenImage import OnscreenImage
+
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletBoxShape
+from panda3d.bullet import BulletSphereShape
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletConvexHullShape
+from panda3d.bullet import BulletDebugNode
+
 import math,sys
 import ConfigParser
 import objects
@@ -22,14 +31,11 @@ import collision, lights, edit, overlay, menu
 from createcube import createCube
 #print len((1,2,3))
 
-base.cTrav = CollisionTraverser()
+#base.cTrav = CollisionTraverser()
 #base.cTrav = traverser
 
 base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
 crosshair = OnscreenImage(image = 'crosshair.png', pos = (0, 0, 0.02),scale=(.003,1,.003))
-
-# set up the collision traverser
-collisionHandler = collision.initializeCollisions()
 
 #collision.setupMousePicker('mouseraycnode',collisionHandler)
 
@@ -86,14 +92,17 @@ class World(DirectObject):
         
         #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
         #code!  So I must temporarily keep the old code here. Who? We need to fix this.
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena collision type barrier.egg")
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena collision type none.egg")
         #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
+        print self.env.ls()
+        #self.env.flattenStrong()
         #print self.env.ls()
         self.players = objects.loadPlayers(self.env)
+        collisionHandler=0
         self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler)
         self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler)
         self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler)
-        objects.loadSpotlights(self.env)
+        #objects.loadSpotlights(self.env)
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
         #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
@@ -102,7 +111,37 @@ class World(DirectObject):
         #camera.setPos(0,0,0)
         #camera.reparentTo(self.player)
         #print camera.getParent().getName()
+    def update(self, task):
+        dt = globalClock.getDt()
+
+        #self.processInput(dt)
+        #self.world.doPhysics(dt)
+        self.world.doPhysics(dt, 5, 1.0/180.0)
+
+        return task.cont
     def setupCollisions(self):
+        taskMgr.add(self.update, 'updateWorld')
+        
+        self.worldNP = render.attachNewNode('World')
+
+        # World
+        self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
+        self.debugNP.show()
+        self.debugNP.node().showWireframe(True)
+        self.debugNP.node().showConstraints(True)
+        self.debugNP.node().showBoundingBoxes(False)
+        self.debugNP.node().showNormals(True)
+        
+        self.world = BulletWorld()
+        self.world.setGravity(Vec3(0, 0, -9.81))
+        self.world.setDebugNode(self.debugNP.node())
+        
+        #player
+        self.mover.bulletInit(self.world)
+        
+        #env
+        objects.genBulletBoxes(self.env,self.world)
+        return
         base.cTrav.showCollisions(render)
         #self.pusher = CollisionHandlerEvent()
         #self.pusher.addInPattern('%fn-into-%in')

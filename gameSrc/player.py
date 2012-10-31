@@ -36,7 +36,6 @@ class Player():
         
         self.id = Player.counter
         Player.counter = Player.counter + 1
-         
         
     def fpMove(self,task):
         #CONSTANTS

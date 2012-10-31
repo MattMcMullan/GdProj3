@@ -6,6 +6,14 @@ from direct.interval.IntervalGlobal import * #for compound intervals
 from direct.task import Task #for update  functions
 import math,sys
 
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletBoxShape
+from panda3d.bullet import BulletSphereShape
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletConvexHullShape
+from panda3d.bullet import BulletDebugNode
+
 from player import Player
 from spawner import Spawner
 from model import Model
@@ -65,7 +73,24 @@ def listNodes(env,prefix):
             return nodes
         nodes.append(node)
         index = index + 1
-
+def genBulletBoxes(env,world):
+    for np in listNodes(env,"Collision_box_"):
+        geom = np.node().getGeom(0)
+        # get the minimum and maximum points
+        vdata = geom.getVertexData()
+        vertices = GeomVertexReader(vdata,'vertex')
+        # get the transform
+        transform = np.getTransform().getMat()
+        
+        shape = BulletConvexHullShape()
+        while not vertices.isAtEnd():
+            vertex = transform.xformVecGeneral(vertices.getData3f())
+            shape.addPoint(LPoint3(vertex[0],vertex[1],vertex[2]))
+        node = BulletRigidBodyNode('env')
+        node.addShape(shape)
+        enp = env.attachNewNode(node)
+        world.attachRigidBody(node)
+        np.removeNode()
 def loadColBoxes(env, handler):
     # traverse through the collision geometry
     for np in listNodes(env,"Collision_box_"):
