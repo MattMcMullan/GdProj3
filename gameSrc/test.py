@@ -58,7 +58,9 @@ class World(DirectObject):
         self.editMode = False
         #world init
         self.loadModels()
+        
         self.mover = Human(self)
+        
         self.setupLights()
         self.setupCollisions()
         #self.initMove()
@@ -66,6 +68,7 @@ class World(DirectObject):
                 
         self.overlay = overlay.Overlay(self)
         #self.ball = ball.Ball(self)
+
         self.onRay = list()
         self.offRay = list()
         self.activeRay = list()
@@ -121,6 +124,7 @@ class World(DirectObject):
         taskMgr.add(self.update, 'updateWorld')
         
         self.worldNP = render.attachNewNode('World')
+
         # World
         self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
         self.debugNP.show()
@@ -128,12 +132,16 @@ class World(DirectObject):
         self.debugNP.node().showConstraints(True)
         self.debugNP.node().showBoundingBoxes(False)
         self.debugNP.node().showNormals(True)
+        
         self.world = BulletWorld()
         self.world.setGravity(Vec3(0, 0, 0))
         self.world.setDebugNode(self.debugNP.node())
         
         #player
-        self.mover.bulletInit(self.world)
+        tmp = self.env.find("**/PlayerSpawn1")
+        self.mover.bulletInit(self.world,tmp.getPos())
+        tmp.detachNode()
+        
         #env
         objects.genBulletBoxes(self.env,self.world)
         return

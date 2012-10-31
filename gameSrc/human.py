@@ -15,6 +15,7 @@ from panda3d.bullet import BulletBoxShape
 from panda3d.bullet import BulletSphereShape
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletDebugNode
+from panda3d.bullet import BulletCharacterControllerNode
 
 mousePos       = [0,0] 
 mousePrevPos    = [0,0] 
@@ -119,6 +120,7 @@ class Human():
         self.player.setPos(0,0,1)
         
     def fpMove(self,task):
+        return
         dt = task.time-self.prevTime
         #self.human.setZ(self.player.getZ()-.5)
         #if not self.parent.editMode:
@@ -185,17 +187,26 @@ class Human():
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
         
         return Task.cont
-    def bulletInit(self,world):
+    def bulletInit(self,world,pos):
         oldpath = self.human.find("**/body_coll")
         shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
-        node = BulletRigidBodyNode('PlayerCollide')
-        node.setMass(1.0)
-        node.addShape(shape)
-        np = render.attachNewNode(node)
-        world.attachRigidBody(node)
-        self.human.reparentTo(np)
-        self.player.reparentTo(np)
-        camera.reparentTo(self.human)
+        self.character = BulletCharacterControllerNode(shape, 0.4, 'Human')
+        self.characterNP = render.attachNewNode(self.character)
+        self.human.reparentTo(self.characterNP)
+        self.player.reparentTo(self.characterNP)
+        self.characterNP.setPos(pos[0],pos[1],pos[2])
+        self.characterNP.setCollideMask(BitMask32.allOn())
+        
+        world.attachCharacter(self.character)
+        #node = BulletRigidBodyNode('PlayerCollide')
+        #node.setMass(1.0)
+        #node.addShape(shape)
+        #np = render.attachNewNode(node)
+        #np.setPos(0,0,-2)
+        #world.attachRigidBody(node)
+        #self.human.reparentTo(np)
+        #self.player.reparentTo(np)
+        #camera.reparentTo(self.human)
     def die(self,event):
         base.cTrav.removeCollider(self.wheelsphere)
         self.human.node().getChild(0).removeChild(0)
