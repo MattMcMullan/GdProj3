@@ -157,8 +157,8 @@ class clawTrap():
     def __init__(self, world, worldNP):
         self.failed = 1
         self.world = world
-        if floatTrap.model==0:
-            floatTrap.model = Model("../assets/3d/Actors/claw3.egg")
+        if clawTrap.model==0:
+            clawTrap.model = Model("../assets/3d/Actors/claw3.egg")
         h = deg2Rad(camera.getH())
         p = deg2Rad(camera.getP())
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
@@ -170,9 +170,9 @@ class clawTrap():
         npos = rayHit.getHitPos()
         n = rayHit.getHitNormal()
         print n
-        #npos = map(lambda i: ppos[i]+dir[i]*25, range(3))
-        self.instance = floatTrap.model.createInstance(pos=npos,hpr=(-90*n.x,180*(n.z==1)+90*(abs(n.x)+n.y),0))
-        self.index = floatTrap.index
+        npos = map(lambda i: npos[i]+n[i]*5, range(3))
+        self.instance = clawTrap.model.createInstance(pos=npos,hpr=(-90*n.x,180*(n.z==1)+90*(abs(n.x)+n.y),0))
+        self.index = clawTrap.index
         
         pmin = LPoint3()
         pmax = LPoint3()
@@ -190,13 +190,13 @@ class clawTrap():
         world.attachGhost(self.sphere)
         
         #taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
-        floatTrap.traps.append(self)
-        floatTrap.index = floatTrap.index + 1
+        clawTrap.traps.append(self)
+        clawTrap.index = clawTrap.index + 1
         self.failed = 0
         #pos = self.instance.getPos()
         #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
     def kill(self):
-        floatTrap.traps.remove(self)
+        clawTrap.traps.remove(self)
         self.world.removeGhost(self.sphere)
         self.instance.detachNode()
     def check(self,contacts,human,players):
@@ -207,12 +207,12 @@ class clawTrap():
             name = contactObject.getName()
             print contactObject
             if name==human.character.getName():
-                human.trap1()
+                human.trap2()
                 self.kill()
                 return
             for i in range(len(players)):
                 if name==players[i].character.getName():
-                    players[i].trap1()
+                    players[i].trap2()
                     self.kill()
                     return
             
@@ -360,11 +360,20 @@ class Human():
         self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
         
+        contacts = self.world.contactTest(self.character).getContacts()
+        for c in contacts:
+            contactObject = c.getNode0()
+            if c.getNode0().getName()=="Human":
+                contactObject = c.getNode1()
+            if contactObject.getName()=="env":
+                self.vel = map(lambda x: x*.9, self.vel)
+                print "env"
+        
         return Task.cont
     def bulletInit(self,world,pos):
         oldpath = self.human.find("**/body_coll")
-        shape = BulletSphereShape(10)#oldpath.node().getSolid(0).getRadius())
-        self.character = BulletCharacterControllerNode(shape, 0.4, 'Human')
+        self.shape = BulletSphereShape(10)#oldpath.node().getSolid(0).getRadius())
+        self.character = BulletCharacterControllerNode(self.shape, 0.4, 'Human')
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
         self.character.setGravity(0)
@@ -391,6 +400,10 @@ class Human():
         print "You Died!"
     def trap1(self):
         self.vel = map(lambda x: x*.25, self.vel)
+        self.traptime = self.traptime + 20
+        return
+    def trap2(self):
+        self.vel = (0,0,0)
         self.traptime = self.traptime + 20
         return
         

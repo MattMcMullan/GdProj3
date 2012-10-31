@@ -116,6 +116,10 @@ class World(DirectObject):
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
                 i.check(contacts,self.mover,self.players)
+        for i in human.clawTrap.traps:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.check(contacts,self.mover,self.players)
         
         #self.processInput(dt)
         #self.world.doPhysics(dt)

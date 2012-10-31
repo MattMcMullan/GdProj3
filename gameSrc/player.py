@@ -21,6 +21,7 @@ class Player():
     model = 0
     counter = 0
     def __init__(self,ppos, world, worldNP):
+        self.traptime = 0
         self.world = world
         self.worldNP = worldNP
         if not Player.model:
@@ -113,4 +114,10 @@ class Player():
         self.instance.node().getChild(0).removeChild(0)
         print "Computer player eliminated!"
     def trap1(self):
+        self.velocity = map(lambda x: x*.25, self.vel)
+        self.traptime = self.traptime + 20
+        return
+    def trap2(self):
+        self.velocity = (0,0,0)
+        self.traptime = self.traptime + 20
         return
