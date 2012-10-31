@@ -142,6 +142,9 @@ class World(DirectObject):
         self.mover.bulletInit(self.world,tmp.getPos())
         tmp.detachNode()
         
+        for i in range(0,5):
+            self.world.attachCharacter(self.players[i].player)
+        
         #env
         objects.genBulletBoxes(self.env,self.world)
         return
