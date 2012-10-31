@@ -31,7 +31,7 @@ def setupAmbientLight(name="ambientLight",color=.25,show=1):
         render.setLight(lightNp)
     return lightNp
 
-def loadModelSpotlightByName(model,originName,targetName,newName,color=1,show=1):
+def loadModelSpotlightByName(model,originName,targetName,newName,color=5,show=1):
     """loadModelCollisionsByName
     parameters:
         model: the panda node

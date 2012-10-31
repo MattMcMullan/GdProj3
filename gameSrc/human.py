@@ -254,8 +254,9 @@ class Human():
         dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
         #set the new position
         self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
-        self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
-        self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
+        self.human.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
+        #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
     def launch(self):
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel, self.world, self.worldNP))
@@ -298,7 +299,6 @@ class Human():
                 contactObject = c.getNode1()
             if contactObject.getName()=="env":
                 self.vel = map(lambda x: x*.9, self.vel)
-                print "env"
         
         return Task.cont
     def bulletInit(self,world,pos):
@@ -310,6 +310,7 @@ class Human():
         self.character.setGravity(0)
         #self.human.setPos(pos)
         self.human.reparentTo(self.characterNP)
+        self.human.hide()
         #self.player.setPos(pos)
         self.player.reparentTo(self.characterNP)
         self.characterNP.setCollideMask(BitMask32.allOn())

@@ -151,6 +151,11 @@ class World(DirectObject):
         #optimization
         self.env.flattenStrong()
         render.analyze()
+        
+        self.crowd = loader.loadModel("../assets/3d/Actors/crowd.egg")
+        self.crowd.reparentTo(render)
+        self.crowd.setScale(10)
+        self.crowd.setPos(0,0,-1000)
     def setupLights(self):
         """setupLights
         parameters:

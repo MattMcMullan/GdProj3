@@ -78,7 +78,7 @@ class Projectile():
         if contacts[0].getNode0().getName()=="ProjectileSphere":
             contactObject = contacts[0].getNode1()
         name = contactObject.getName()
-        print name
+        #print name
         if name==human.character.getName():
             human.impact(self.vel)
             self.kill()
