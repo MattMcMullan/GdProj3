@@ -45,7 +45,7 @@ class Projectile():
         pos = ppos
         
         shape = BulletSphereShape(.5*r)
-        self.sphere = BulletGhostNode('Sphere')
+        self.sphere = BulletGhostNode('ProjectileSphere')
         self.sphere.addShape(shape)
         self.sphere.setDeactivationEnabled(False)
         self.np = worldNP.attachNewNode(self.sphere)
@@ -64,21 +64,35 @@ class Projectile():
         self.lifeTime = 0
         Projectile.projectiles.append(self)
         self.TIMEDLIFE = 120
+    def kill(self):
+        self.instance.removeNode()
+        self.parent.projectiles.remove(self)
+        self.world.removeGhost(self.sphere)
+        Projectile.projectiles.remove(self)
+    def check(self,human,players):
+        contacts = self.world.contactTest(self.sphere).getContacts()
+        if len(contacts)==0:
+            return
+        contactObject = contacts[0].getNode0()
+        if contacts[0].getNode0().getName()=="TrapSphere":
+            contactObject = contacts[0].getNode1()
+        name = contactObject.getName()
+        
+        if name==human.character.getName():
+            human.impact(self.vel)
+            self.kill()
+            return
+        for i in range(len(players)):
+            if name==players[i].character.getName():
+                players[i].impact(self.vel)
+                self.kill()
+                return
+        return
+        
     def move(self,task):
         dt = task.time-self.prevTime
         #If the projectile exceeds its maximum lifetime or burns out on the arena bounds -
         self.lifeTime += dt
-        contacts = self.world.contactTest(self.sphere).getContacts()
-        if len(contacts)>0:
-            contact = contacts[0]
-            #name = contact.getName()
-            #print name
-            self.instance.removeNode()
-            self.parent.projectiles.remove(self)
-            self.world.removeGhost(self.sphere)
-            Projectile.projectiles.remove(self)
-            #self.world.
-            return
         if(self.lifeTime >= self.TIMEDLIFE):
             #kill projectile
             self.instance.removeNode()

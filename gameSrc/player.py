@@ -121,3 +121,7 @@ class Player():
         self.velocity = (0,0,0)
         self.traptime = self.traptime + 20
         return
+
+    def impact(self,vel):
+        diff = map(lambda i: self.vel[i]-vel[i], range(3))
+        self.vel = map(lambda i: self.vel[i]-diff[i], range(3))

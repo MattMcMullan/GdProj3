@@ -1,6 +1,6 @@
 from pandac.PandaModules import loadPrcFileData 
-loadPrcFileData("", "framebuffer-multisample 1")
-loadPrcFileData("","multisamples 1")
+loadPrcFileData("", "framebuffer-multisample 4")
+loadPrcFileData("","multisamples 4")
 loadPrcFileData("","fullscreen #f")
 loadPrcFileData("","win-size 800 600")
 import direct.directbase.DirectStart #starts Panda
@@ -75,7 +75,7 @@ class World(DirectObject):
         base.disableMouse()
         base.setFrameRateMeter(True)
         #render.setAntialias(AntialiasAttrib.MAuto)
-        #render.setAntialias(AntialiasAttrib.MMultisample,1)
+        #render.setAntialias(AntialiasAttrib.MMultisample,4)
         self.filters = CommonFilters(base.win, base.cam)
         self.filters.setBloom(blend=(1,0,0,1), desat=-0.5, intensity=6.0, size=2)
         #self.filters.setAmbientOcclusion()
