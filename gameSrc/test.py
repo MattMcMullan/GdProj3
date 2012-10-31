@@ -57,12 +57,9 @@ class World(DirectObject):
         self.spikeInstances = list()
         self.editMode = False
         #world init
+        self.setupBullet()
         self.loadModels()
-        
-        self.mover = Human(self)
-        
         self.setupLights()
-        self.setupCollisions()
         #self.initMove()
         self.accept("escape",sys.exit)
                 
@@ -85,46 +82,9 @@ class World(DirectObject):
         #render.setAntialias(AntialiasAttrib.MMultisample,1)
         self.filters = CommonFilters(base.win, base.cam)
         #self.filters.setCartoonInk()
-    def loadModels(self):
-        """ loads initial models into the world """
-        #self.env = collision.loadAndPositionModelFromFile("environment",scale=.25,pos=(-8,42,0))
-        #self.env = collision.loadAndPositionModelFromFile("2012sphereenvironment")
-        #self.panda = collision.loadAndPositionModelFromFile("panda-model",scale=.005,show=0)
-        
-        #NOTE: I'm having a pathing error, and for some reason cannot use the new (currently commented)
-        #code!  So I must temporarily keep the old code here. Who? We need to fix this.
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena collision type none.egg")
-        #self.env = collision.loadAndPositionModelFromFile('../assets/3d/Actors/zzzzzzzzzarena proto spawn tests.egg')
-        print self.env.ls()
-        #self.env.flattenStrong()
-        #print self.env.ls()
-        self.players = objects.loadPlayers(self.env)
-        collisionHandler=0
-        self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler)
-        self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler)
-        self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler)
-        #objects.loadSpotlights(self.env)
-        
-        #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
-        #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
-        #self.human.setZ(1)
-        
-        #camera.setPos(0,0,0)
-        #camera.reparentTo(self.player)
-        #print camera.getParent().getName()
-    def update(self, task):
-        dt = globalClock.getDt()
-
-        #self.processInput(dt)
-        #self.world.doPhysics(dt)
-        self.world.doPhysics(dt,1)
-
-        return task.cont
-    def setupCollisions(self):
+    def setupBullet(self):
         taskMgr.add(self.update, 'updateWorld')
-        
         self.worldNP = render.attachNewNode('World')
-
         # World
         self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
         self.debugNP.show()
@@ -137,51 +97,35 @@ class World(DirectObject):
         self.world.setGravity(Vec3(0, 0, 0))
         self.world.setDebugNode(self.debugNP.node())
         
-        #player
+    def update(self, task):
+        dt = globalClock.getDt()
+
+        #self.processInput(dt)
+        #self.world.doPhysics(dt)
+        self.world.doPhysics(dt,1)
+
+        return task.cont
+    def loadModels(self):
+        """ loads initial models into the world """
+        # create the environment
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena collision type none.egg")
+        self.envBoxes = objects.genBulletBoxes(self.env,self.world)
+        #load objects out of the environment
+        #human
+        self.mover = Human(self)
         tmp = self.env.find("**/PlayerSpawn1")
         self.mover.bulletInit(self.world,tmp.getPos())
         tmp.detachNode()
-        
+        #AI players
+        self.players = objects.loadPlayers(self.env)
         for i in range(0,5):
             self.world.attachCharacter(self.players[i].player)
         
-        #env
-        self.envBoxes = objects.genBulletBoxes(self.env,self.world)
-        return
-        base.cTrav.showCollisions(render)
-        #self.pusher = CollisionHandlerEvent()
-        #self.pusher.addInPattern('%fn-into-%in')
-        #self.pusher.addOutPattern('%fn-out-%in')
-        #self.pusher.addAgainPattern('%fn-again-%in')
-        for i in range(1,72):
-            colnp = collision.loadModelCollisionsByName(self.env,"Collision_box_"+str(i),"EnvCollide")
-            #base.cTrav.addCollider(colnp,self.pusher)
-            #self.pusher.addCollider(colnp,self.env)
-        #objects.loadColBoxes(self.env,self.pusher)
-        #print self.env.ls()
-        self.mover.addCollisions(collisionHandler,"body_coll")
-        
-        self.accept("body_coll-into-EnvCollide",sys.exit)
-        self.accept("body_coll-out-EnvCollide",sys.exit)
-        self.accept("body_coll-again-EnvCollide",sys.exit)
-        self.accept("PlayerCollide-into-EnvCollide",sys.exit)
-        self.accept("PlayerCollide-out-EnvCollide",sys.exit)
-        self.accept("PlayerCollide-again-EnvCollide",sys.exit)
-        for i in range(1,72):
-            self.accept("spawner"+str(i)+"-into-PlayerCollide",sys.exit)
-            self.accept("PlayerCollide-into-spawner"+str(i),sys.exit)
-            #self.accept("spawner"+str(i)+"-into-body_coll",sys.exit)
-            #self.accept("body_coll-into-spawner"+str(i),sys.exit)
-        return
-        #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
-        #pandaCollider.show()
-        #pandaCollider.node().addSolid(CollisionSphere((0, 0, 0), 2/.005))
-        #base.cTrav.addCollider(pandaCollider,collisionHandler)
-        #self.lifter = CollisionHandlerFloor()
-        #self.lifter.setOffset(1)
-        #base.cTrav.addCollider(self.playerCnode,self.lifter) 
-        #self.lifter.addCollider(self.playerCnode, self.player)
-        #base.cTrav.showCollisions(render)
+        #Spawners
+        collisionHandler=0
+        self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler)
+        self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler)
+        self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler)
     def setupLights(self):
         """loads initial lighting"""
         self.ambientLight = lights.setupAmbientLight()
