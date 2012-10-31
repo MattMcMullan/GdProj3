@@ -20,9 +20,7 @@ from panda3d.bullet import BulletSphereShape
 class Player():
     model = 0
     counter = 0
-    def __init__(self,ppos, world, worldNP):
-        self.world = world
-        self.worldNP = worldNP
+    def __init__(self,ppos):
         if not Player.model:
             Player.model = Model("../assets/3d/Actors/robot rig 10 coll.egg")
             Player.model.modelRoot.find("**/body_coll").show()
@@ -53,7 +51,6 @@ class Player():
         
         #Function    
         dt = task.time-self.prevTime
-        self.instance.setZ(self.instance.getZ())
         
         self.prevTime = task.time
         target = camera
@@ -85,12 +82,16 @@ class Player():
         #self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
         self.character.setAngularMovement(0)
         self.character.setLinearMovement(self.velocity, True)
-        self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        self.instance.setPos(self.characterNP.getPos())
+        self.player.setPos(self.characterNP.getPos())
         #if self.id == 0:
-        #    print pos[0]+dis[0]
-        #    print pos[1]+dis[1]
-        #    print pos[2]+dis[2]
-        #    print str(self.id) + " Z Displacement:" + str(dis[2]) + " distance:" + str(distance)
+            #a1 = self.player.getPos()
+            #a2 = self.characterNP.getPos()
+            #a3 = self.instance.getPos()
+            #print "1: "+str(a1[0])+" "+str(a1[1])+" "+str(a1[2])
+            #print "2 :"+str(a2[0])+" "+str(a2[1])+" "+str(a2[2])
+            #print "3 :"+str(a3[0])+" "+str(a3[1])+" "+str(a3[2])
         self.projTime += dt
         if self.projTime >= THROWPERIOD:
             self.projTime -= THROWPERIOD
@@ -98,11 +99,16 @@ class Player():
         return task.cont
     def bulletInit(self,world,pos):
         oldpath = self.instance.find("**/body_coll")
-        shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
+        #shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
+        shape = BulletSphereShape(15.0)
         self.character = BulletCharacterControllerNode(shape, 0.4, 'AI')
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
         self.character.setGravity(0)
+        self.instance.setPos(pos)
+        self.instance.reparentTo(self.characterNP)
+        self.player.setPos(pos)
+        self.player.reparentTo(self.characterNP)
         self.characterNP.setCollideMask(BitMask32.allOn())
         
         world.attachCharacter(self.character)       

@@ -137,6 +137,16 @@ class World(DirectObject):
         for i in range(0,5):
             self.players[i].bulletInit(self.world,self.players[i].instance.getPos())
         
+        #Zap Cage
+        temp = 1000
+        cagePlanes = list()
+        cagePlanes.append(CollisionPlane(Plane(Point3(temp,temp,temp), Point3(-temp,temp,temp), Point3(temp,-temp,temp))))
+        cagePlanes.append(CollisionPlane(Plane(Point3(temp,temp,temp), Point3(temp,temp,-temp), Point3(temp,-temp,temp))))
+        cagePlanes.append(CollisionPlane(Plane(Point3(temp,temp,temp), Point3(temp,temp,-temp), Point3(-temp,temp,temp))))
+        cagePlanes.append(CollisionPlane(Plane(Point3(temp,temp,-temp), Point3(-temp,temp,-temp), Point3(temp,-temp,-temp))))
+        cagePlanes.append(CollisionPlane(Plane(Point3(-temp,-temp,-temp), Point3(temp,-temp,-temp), Point3(-temp,-temp,temp))))
+        cagePlanes.append(CollisionPlane(Plane(Point3(-temp,-temp,-temp), Point3(-temp,temp,-temp), Point3(-temp,-temp,temp))))
+        
         #Spawners
         collisionHandler=0
         self.aTrapSpawn = objects.loadTrapAs(self.env, self.world, self.worldNP)
