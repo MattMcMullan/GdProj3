@@ -87,7 +87,7 @@ class Human():
         
         self.vel = (0,0,0)
         
-        taskMgr.add(self.fpMove,"moveTask")
+        taskMgr.add(self.fpMove,"moveTask",sort=50)
         taskMgr.add(self.mouseTask, 'mouseTask')
         self.parent = parent
         #self.human = self.parent.human
