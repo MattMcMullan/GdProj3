@@ -74,7 +74,7 @@ class Spawner():
             contactObject = object[0].getNode1()
         name = contactObject.getName()
         if name==mover.character.getName():
-            mover.parent.overlay.changeAmmo(1, 10)
+            mover.parent.overlay.changeAmmo(1, 3)
         self.hidden = 1
         self.world.removeRigidBody(self.np.node())
         self.physrep.hide()
@@ -88,7 +88,7 @@ class Spawner():
             contactObject = object[0].getNode1()
         name = contactObject.getName()
         if name==mover.character.getName():
-            mover.parent.overlay.changeAmmo(2, 10)
+            mover.parent.overlay.changeAmmo(2, 3)
         self.hidden = 1
         self.world.removeRigidBody(self.np.node())
         self.physrep.hide()
