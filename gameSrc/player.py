@@ -59,7 +59,7 @@ class Player():
         self.prevTime = task.time
         target = camera
         targetPos = target.getPos()
-        pos = self.instance.getPos()
+        pos = self.characterNP.getPos()
         vector2Target = self.normalize(targetPos - pos)
         
         #notarget = 0
