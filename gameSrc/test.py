@@ -103,19 +103,15 @@ class World(DirectObject):
         for i in self.aTrapSpawn:
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
-                print "atrap"
-                print contacts
+                i.trap1Collide(contacts,self.mover)
         for i in self.bTrapSpawn:
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
-                print "btrap"
-                print contacts
+                i.trap2Collide(contacts,self.mover)
         for i in self.ammoSpawn:
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
-                print "ammo"
                 i.ammoCollide(contacts,self.mover)
-                print contacts
         
         #self.processInput(dt)
         #self.world.doPhysics(dt)
