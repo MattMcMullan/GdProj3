@@ -124,7 +124,8 @@ class Human():
         #self.human.setZ(self.player.getZ()-.5)
         #if not self.parent.editMode:
         camera.setPos(self.player.getPos()+(0,0,1))
-        
+        damp = (1.-(.2*dt))
+        self.vel = map(lambda x: damp*x, self.vel)
         self.prevTime = task.time
         pos = self.player.getParent().getPos()
         delta = 10*dt
@@ -193,6 +194,7 @@ class Human():
         self.character = BulletCharacterControllerNode(shape, 0.4, 'Human')
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
+        self.character.setGravity(0)
         self.human.setPos(pos)
         self.human.reparentTo(self.characterNP)
         self.player.setPos(pos)
