@@ -28,7 +28,7 @@ class Spawner():
         np = worldNP.attachNewNode(BulletRigidBodyNode('Sphere'))
         #np.node().setMass(1.0)
         np.node().addShape(shape)
-        np.node().addShape(shape, TransformState.makePos(Point3(0, 1, 0)))
+        #np.node().addShape(shape, TransformState.makePos(Point3(0, 1, 0)))
         np.setPos(self.pos[0], self.pos[1], self.pos[2] + 14)
         np.setCollideMask(BitMask32.allOn())
 

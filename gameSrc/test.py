@@ -100,6 +100,9 @@ class World(DirectObject):
     def update(self, task):
         dt = globalClock.getDt()
 
+        for i in self.aTrapSpawn:
+            print self.world.contactTest(i.sphere)
+        
         #self.processInput(dt)
         #self.world.doPhysics(dt)
         self.world.doPhysics(dt,1)
