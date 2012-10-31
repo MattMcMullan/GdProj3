@@ -20,10 +20,10 @@ from human import Human
 
 import collision, lights, edit, overlay, menu
 from createcube import createCube
-print len((1,2,3))
+#print len((1,2,3))
 
-traverser = CollisionTraverser('traverser name')
-base.cTrav = traverser
+base.cTrav = CollisionTraverser()
+#base.cTrav = traverser
 
 base.win.movePointer(0, base.win.getXSize() / 2, base.win.getYSize() / 2)
 crosshair = OnscreenImage(image = 'crosshair.png', pos = (0, 0, 0.02),scale=(.003,1,.003))
@@ -101,7 +101,7 @@ class World(DirectObject):
         
         #camera.setPos(0,0,0)
         #camera.reparentTo(self.player)
-        print camera.getParent().getName()
+        #print camera.getParent().getName()
     def setupCollisions(self):
         base.cTrav.showCollisions(render)
         #self.pusher = CollisionHandlerEvent()
@@ -113,7 +113,7 @@ class World(DirectObject):
             #base.cTrav.addCollider(colnp,self.pusher)
             #self.pusher.addCollider(colnp,self.env)
         #objects.loadColBoxes(self.env,self.pusher)
-        print self.env.ls()
+        #print self.env.ls()
         self.mover.addCollisions(collisionHandler,"body_coll")
         
         self.accept("body_coll-into-EnvCollide",sys.exit)
@@ -125,8 +125,8 @@ class World(DirectObject):
         for i in range(1,72):
             self.accept("spawner"+str(i)+"-into-PlayerCollide",sys.exit)
             self.accept("PlayerCollide-into-spawner"+str(i),sys.exit)
-            self.accept("spawner"+str(i)+"-into-body_coll",sys.exit)
-            self.accept("body_coll-into-spawner"+str(i),sys.exit)
+            #self.accept("spawner"+str(i)+"-into-body_coll",sys.exit)
+            #self.accept("body_coll-into-spawner"+str(i),sys.exit)
         return
         #pandaCollider = self.panda.attachNewNode(CollisionNode('pandacnode'))
         #pandaCollider.show()

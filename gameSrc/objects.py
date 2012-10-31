@@ -104,5 +104,5 @@ def loadColBoxes(env, handler):
         envCollide = envCollides.getPath(i)
         envCollide.show()
         print "SHOWING!!!!!!!!!!!!!!!!!!!!!!!"
-    print env.ls()
+    #print env.ls()
     

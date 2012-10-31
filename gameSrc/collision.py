@@ -16,7 +16,6 @@ def initializeCollisions():
     """
     base.cTrav = CollisionTraverser('traverser name')
     collisionHandler = CollisionHandlerEvent()
-    collisionHandler.addInPattern('ate-%in')
     collisionHandler.addInPattern('%fn-into-%in')
     collisionHandler.addOutPattern('%fn-out-%in')
     collisionHandler.addAgainPattern('%fn-again-%in')

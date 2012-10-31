@@ -138,7 +138,7 @@ class Human():
                 elif weapon == 1:
                     self.placeFloatTrap()
             self.keymap["m1"] = 0
-            
+        
         #get displacement
         dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
         #set the new position
@@ -178,14 +178,17 @@ class Human():
         
         return Task.cont
     def addCollisions(self,handler,name):
-        print self.human.ls()
+        #print self.human.ls()
         path = self.human.find("**/"+name)
         path.node().setName("PlayerCollide")
         path = self.human.find("**/PlayerCollide")
-        print type(path.node().getSolid(0))
-        path.show()
-        #newsolid = CollisionSphere(self.human.getPos(),20)
-        #newnode = self.human.
+        path.reparentTo(self.human)
+        #path.setPos(0,0,1)
+        print self.human.ls()
+        # newsolid = CollisionSphere(self.human.getPos(),20)
+        # newnode = CollisionNode("PlayerCollide")
+        # newnode.addSolid(newsolid)
+        # path = self.human.attachNewNode(newnode)
         base.cTrav.addCollider(path,handler)
         #Undo when un-event
         #handler.addCollider(path,self.human)
