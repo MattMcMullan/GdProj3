@@ -13,6 +13,7 @@ from panda3d.bullet import BulletSphereShape
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletConvexHullShape
 from panda3d.bullet import BulletDebugNode
+from panda3d.bullet import BulletGhostNode
 
 import collision
 
@@ -25,14 +26,14 @@ class Spawner():
         
         shape = BulletSphereShape(13)
 
-        np = worldNP.attachNewNode(BulletRigidBodyNode('Sphere'))
+        np = worldNP.attachNewNode(BulletGhostNode('Sphere'))
         #np.node().setMass(1.0)
         np.node().addShape(shape)
         #np.node().addShape(shape, TransformState.makePos(Point3(0, 1, 0)))
-        np.setPos(self.pos[0], self.pos[1], self.pos[2] + 14)
+        np.setPos(self.pos[0], self.pos[1], self.pos[2] )
         np.setCollideMask(BitMask32.allOn())
 
-        world.attachRigidBody(np.node())
+        world.attachGhost(np.node())
 
         self.sphere = np.node()
         
@@ -58,13 +59,13 @@ class Spawner():
         if name==mover.character.getName():
             mover.parent.overlay.changeAmmo(0, 10)
         self.hidden = 1
-        self.world.removeRigidBody(self.np.node())
+        self.world.removeGhost(self.np.node())
         self.physrep.hide()
         taskMgr.doMethodLater(30,self.regen,'ammoRegen'+str(self.count))
         return
     def regen(self,task):
         self.hidden = 0
-        self.world.attachRigidBody(self.np.node())
+        self.world.attachGhost(self.np.node())
         self.physrep.show()
     def trap1Collide(self,object,mover):
         if self.hidden==1:
@@ -76,7 +77,7 @@ class Spawner():
         if name==mover.character.getName():
             mover.parent.overlay.changeAmmo(1, 3)
         self.hidden = 1
-        self.world.removeRigidBody(self.np.node())
+        self.world.removeGhost(self.np.node())
         self.physrep.hide()
         taskMgr.doMethodLater(30,self.regen,'trap1Regen'+str(self.count))
         return
@@ -90,7 +91,7 @@ class Spawner():
         if name==mover.character.getName():
             mover.parent.overlay.changeAmmo(2, 3)
         self.hidden = 1
-        self.world.removeRigidBody(self.np.node())
+        self.world.removeGhost(self.np.node())
         self.physrep.hide()
         taskMgr.doMethodLater(30,self.regen,'trap2Regen'+str(self.count))
         return

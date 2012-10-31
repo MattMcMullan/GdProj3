@@ -7,6 +7,7 @@ from direct.task import Task #for update  functions
 import math,sys
 from math import sin
 from math import cos
+import random
 import collision
 from model import Model
 from panda3d.bullet import BulletWorld
@@ -15,6 +16,7 @@ from panda3d.bullet import BulletBoxShape
 from panda3d.bullet import BulletSphereShape
 from panda3d.bullet import BulletRigidBodyNode
 from panda3d.bullet import BulletDebugNode
+from panda3d.bullet import BulletGhostNode
 from panda3d.bullet import BulletCharacterControllerNode
 
 mousePos       = [0,0] 
@@ -25,8 +27,10 @@ class Projectile():
     def __init__(self, ppos, h, p, parent, parentVel, world, worldNP):
         self.world=world
         if Projectile.model==0:
-            Projectile.model = Model("../assets/3d/Actors/ball_proj1.egg")
+            Projectile.model = Model("../assets/3d/Actors/ball_proj2.egg")
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0),scale=3)
+        
+        self.dhpr = [random.random(),random.random(),random.random()]
         
         pmin = LPoint3()
         pmax = LPoint3()
@@ -38,14 +42,13 @@ class Projectile():
         pos = ppos
         
         shape = BulletSphereShape(.5*r)
-        self.sphere = BulletRigidBodyNode('Sphere')
+        self.sphere = BulletGhostNode('Sphere')
         self.sphere.addShape(shape)
-        self.sphere.setMass(1.0)
         self.sphere.setDeactivationEnabled(False)
         self.np = worldNP.attachNewNode(self.sphere)
         self.np.setPos(ppos)
         self.np.setCollideMask(BitMask32.allOn())
-        world.attachRigidBody(self.sphere)
+        world.attachGhost(self.sphere)
         
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
         self.vel = parentVel
@@ -68,14 +71,14 @@ class Projectile():
             #print name
             self.instance.removeNode()
             self.parent.projectiles.remove(self)
-            self.world.removeRigidBody(self.sphere)
+            self.world.removeGhost(self.sphere)
             #self.world.
             return
         if(self.lifeTime >= self.TIMEDLIFE):
             #kill projectile
             self.instance.removeNode()
             self.parent.projectiles.remove(self)
-            self.world.removeRigidBody(self.sphere)
+            self.world.removeGhost(self.sphere)
             #print "Projectile removed"
         if(self.lifeTime < self.TIMEDLIFE):
             #get the position
@@ -83,11 +86,16 @@ class Projectile():
             #get the displacement
             dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
             #set the new position
-            self.np.setPos(pos[0]+dis[0]-self.off[0],pos[1]+dis[1]-self.off[1],pos[2]+dis[2]-self.off[2])
+            self.np.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
             self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+            
+            hpr = self.instance.getHpr()
+            hpr = map(lambda i: hpr[i]+dt*100*self.dhpr[i], range(3))
+            self.instance.setHpr(hpr[0],hpr[1],hpr[2])
             return task.cont
             
 class floatTrap():
+    traps = list()
     model = 0
     index = 0
     def __init__(self, ppos, world, worldNP):
@@ -108,24 +116,25 @@ class floatTrap():
         self.off = (norm[0]*.5,norm[1]*.5,norm[2]*.5)
         r = max(norm)
         shape = BulletSphereShape(.7*r)
-        self.sphere = BulletRigidBodyNode('Sphere')
+        self.sphere = BulletGhostNode('TrapSphere')
         self.sphere.addShape(shape)
-        self.sphere.setMass(1.0)
         self.sphere.setDeactivationEnabled(False)
         self.np = worldNP.attachNewNode(self.sphere)
         self.np.setPos(LVecBase3(npos[0],npos[1],npos[2]))
         self.np.setCollideMask(BitMask32.allOn())
-        world.attachRigidBody(self.sphere)
+        world.attachGhost(self.sphere)
         
-        taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
+        #taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
+        floatTrap.traps.append(self)
         floatTrap.index = floatTrap.index + 1
         #pos = self.instance.getPos()
         #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
-    def check(self,task):
-        contacts = self.world.contactTest(self.sphere).getContacts()
+    def check(self,contacts,human,players):
         if len(contacts)>0:
-            print contacts
-        return task.cont
+            contactObject = contacts[0].getNode0()
+            if contacts[0].getNode0().getName()=="TrapSphere":
+                contactObject = contacts[0].getNode1()
+            print contactObject
             
 class Human():
     def __init__(self,parent, world, worldNP):

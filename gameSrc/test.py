@@ -25,6 +25,7 @@ from panda3d.bullet import BulletDebugNode
 import math,sys
 import ConfigParser
 import objects
+import human
 from human import Human
 
 import collision, lights, edit, overlay, menu
@@ -111,6 +112,10 @@ class World(DirectObject):
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
                 i.ammoCollide(contacts,self.mover)
+        for i in human.floatTrap.traps:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.check(contacts,self.mover,self.players)
         
         #self.processInput(dt)
         #self.world.doPhysics(dt)

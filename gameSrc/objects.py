@@ -43,7 +43,7 @@ def loadTrapAs(env, world, worldNP):
     return traps
     
 def loadTrapBs(env, world, worldNP):
-    model = Model("../assets/3d/Actors/claw1",scale=5)
+    model = Model("../assets/3d/Actors/claw3",scale=5)
     traps = list()
     for ppos in extractPositions(env,"SpawnTrapB"):
         traps.append(Spawner(ppos,model,world, worldNP))
