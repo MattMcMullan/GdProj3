@@ -30,7 +30,7 @@ class Projectile():
         h = deg2Rad(camera.getH())
         p = deg2Rad(camera.getP())
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
-        ppos = map(lambda i: ppos[i]+dir[i]*5, range(3))
+        ppos = map(lambda i: ppos[i]+dir[i]*20, range(3))
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0),scale=3)
         
         self.dhpr = [random.random(),random.random(),random.random()]
@@ -64,16 +64,18 @@ class Projectile():
         self.lifeTime = 0
         Projectile.projectiles.append(self)
         self.TIMEDLIFE = 120
+        self.dead = 0
     def kill(self):
         self.instance.removeNode()
         self.parent.projectiles.remove(self)
         self.world.removeGhost(self.sphere)
         Projectile.projectiles.remove(self)
+        self.dead = 1
     def check(self,contacts,human,players):
         if len(contacts)==0:
             return
         contactObject = contacts[0].getNode0()
-        if contacts[0].getNode0().getName()=="TrapSphere":
+        if contacts[0].getNode0().getName()=="ProjectileSphere":
             contactObject = contacts[0].getNode1()
         name = contactObject.getName()
         print name
@@ -89,6 +91,8 @@ class Projectile():
         return
         
     def move(self,task):
+        if self.dead==1:
+            return
         dt = task.time-self.prevTime
         #If the projectile exceeds its maximum lifetime or burns out on the arena bounds -
         self.lifeTime += dt
