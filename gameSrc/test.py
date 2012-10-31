@@ -119,7 +119,7 @@ class World(DirectObject):
         #AI players
         self.players = objects.loadPlayers(self.env)
         for i in range(0,5):
-            self.world.attachCharacter(self.players[i].player)
+            self.players[i].bulletInit(self.world,self.players[i].instance.getPos())
         
         #Spawners
         collisionHandler=0

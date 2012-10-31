@@ -15,7 +15,7 @@ from human import Projectile
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletCharacterControllerNode
 from panda3d.bullet import BulletCapsuleShape
-from panda3d.bullet import ZUp
+from panda3d.bullet import BulletSphereShape
 
 class Player():
     model = 0
@@ -33,15 +33,11 @@ class Player():
         self.projectiles = list()
         self.projTime = 0.0
         
-        #pnode = ModelRoot("player")
-        #self.player = render.attachNewNode(pnode)
-        #pc = self.player.attachNewNode(CollisionNode("playerCollision"))
-        #pc.node().addSolid(CollisionRay(0,0,-1,0,0,1))
-        #self.playerCnode = pc
-        
-        shape = BulletCapsuleShape(1,1,ZUp)
-        
-        self.player = BulletCharacterControllerNode(shape, 0.4, 'AI')
+        pnode = ModelRoot("player")
+        self.player = render.attachNewNode(pnode)
+        pc = self.player.attachNewNode(CollisionNode("playerCollision"))
+        pc.node().addSolid(CollisionRay(0,0,-1,0,0,1))
+        self.playerCnode = pc
         
         self.id = Player.counter
         Player.counter = Player.counter + 1
@@ -85,8 +81,8 @@ class Player():
         #update position
         #self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
         #self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
-        self.player.setAngularMovement(0)
-        self.player.setLinearMovement(self.velocity, True)
+        self.character.setAngularMovement(0)
+        self.character.setLinearMovement(self.velocity, True)
         self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
         #if self.id == 0:
         #    print pos[0]+dis[0]
@@ -98,17 +94,16 @@ class Player():
             self.projTime -= THROWPERIOD
             self.projectiles.append(Projectile(self.instance.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity))
         return task.cont
-    def bulletInit(self,world):
-        #oldpath = self.human.find("**/body_coll")
+    def bulletInit(self,world,pos):
+        oldpath = self.instance.find("**/body_coll")
         shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
-        node = BulletRigidBodyNode('body_coll')
-        node.setMass(1.0)
-        node.addShape(shape)
-        np = render.attachNewNode(node)
-        np.setPos(0, 0, 2)
-        world.attachRigidBody(node)
-        #self.human.reparentTo(np)
-        self.player.reparentTo(np)        
+        self.character = BulletCharacterControllerNode(shape, 0.4, 'AI')
+        self.characterNP = render.attachNewNode(self.character)
+        self.characterNP.setPos(pos[0],pos[1],pos[2])
+        self.character.setGravity(0)
+        self.characterNP.setCollideMask(BitMask32.allOn())
+        
+        world.attachCharacter(self.character)       
     def normalize(self, vector):
         return vector / sqrt(pow(vector[0],2) + pow(vector[1], 2) + pow(vector[2], 2))
     def die(self,event):
