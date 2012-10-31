@@ -31,8 +31,9 @@ class Overlay():
     #Called to add or remove ammo
     def changeAmmo(self, counter, val):
         self.wepAmmo[counter] += val
-        self.wepDisplay.remove()
-        self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[counter]), fg = (0,1,1,1), pos = (.95, -.9), scale = .125, font = self.font)
+        if self.wepCounter == counter:
+            self.wepDisplay.remove()
+            self.wepDisplay = OnscreenText(text = "%s" % (self.wepAmmo[counter]), fg = (0,1,1,1), pos = (.95, -.9), scale = .125, font = self.font)
     
     def guiLoop(self, task):
     
