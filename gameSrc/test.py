@@ -120,7 +120,7 @@ class World(DirectObject):
                 i.check(contacts,self.mover,self.players)
         
         self.world.doPhysics(dt,1)
-
+        
         return task.cont
     def loadModels(self):
         """ loads initial models into the world """
@@ -143,6 +143,10 @@ class World(DirectObject):
         self.aTrapSpawn = objects.loadTrapAs(self.env, self.world, self.worldNP)
         self.bTrapSpawn = objects.loadTrapBs(self.env, self.world, self.worldNP)
         self.ammoSpawn = objects.loadAmmo(self.env, self.world, self.worldNP)
+        
+        #optimization
+        self.env.flattenStrong()
+        render.analyze()
     def setupLights(self):
         """loads initial lighting"""
         self.ambientLight = lights.setupAmbientLight()
