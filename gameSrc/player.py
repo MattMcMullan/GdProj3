@@ -10,7 +10,7 @@ import time
 import collision
 import threading
 from model import Model
-from human import Projectile
+from projectile import Projectile
 
 from panda3d.bullet import BulletWorld
 from panda3d.bullet import BulletCharacterControllerNode

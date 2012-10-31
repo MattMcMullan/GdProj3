@@ -26,6 +26,9 @@ import math,sys
 import ConfigParser
 import objects
 import human
+from projectile import Projectile
+from traps import clawTrap
+from traps import floatTrap
 from human import Human
 
 import collision, lights, edit, overlay, menu
@@ -49,13 +52,6 @@ class World(DirectObject):
     def beginGame(self):
         self.configurePanda()
         camera.setPosHpr(0, -15, 0, 0, 0, 0) # x,y,z,heading, pitch, roll
-        # list of instances
-        self.boxInstances = list()
-        self.waterInstances = list()
-        self.dangerInstances = list()
-        self.plantInstances = list()
-        self.spikeInstances = list()
-        self.editMode = False
         #world init
         self.setupBullet()
         self.loadModels()
@@ -81,6 +77,7 @@ class World(DirectObject):
         #render.setAntialias(AntialiasAttrib.MAuto)
         #render.setAntialias(AntialiasAttrib.MMultisample,1)
         self.filters = CommonFilters(base.win, base.cam)
+        self.filters.setBloom(blend=(1,0,0,1), desat=-0.5, intensity=6.0, size=2)
         #self.filters.setCartoonInk()
     def setupBullet(self):
         taskMgr.add(self.update, 'updateWorld')
@@ -121,8 +118,6 @@ class World(DirectObject):
             if len(contacts)>0:
                 i.check(contacts,self.mover,self.players)
         
-        #self.processInput(dt)
-        #self.world.doPhysics(dt)
         self.world.doPhysics(dt,1)
 
         return task.cont
