@@ -10,17 +10,19 @@ import collision
 
 class Spawner():
     count = 0
-    def __init__(self,ppos,model,collisionHandler):
+    def __init__(self,ppos,model,collisionHandler,world):
         self.model = model
         self.physrep = model.createInstance(pos=ppos)
         self.pos = ppos
         
-        spawnSphere = CollisionSphere((self.pos[0], self.pos[1], self.pos[2] + 13), 14)
-        spawnNode = CollisionNode("spawner" + str(Spawner.count))
-        spawnNode.addSolid(spawnSphere)
-        spawnNodePath = render.attachNewNode(spawnNode)
-        #base.cTrav.addCollider(spawnNodePath,collisionHandler)
-        spawnNodePath.show()
+        
+        
+        # spawnSphere = CollisionSphere((self.pos[0], self.pos[1], self.pos[2] + 13), 14)
+        # spawnNode = CollisionNode("spawner" + str(Spawner.count))
+        # spawnNode.addSolid(spawnSphere)
+        # spawnNodePath = render.attachNewNode(spawnNode)
+        # #base.cTrav.addCollider(spawnNodePath,collisionHandler)
+        # spawnNodePath.show()
         
         #taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
         Spawner.count = Spawner.count + 1

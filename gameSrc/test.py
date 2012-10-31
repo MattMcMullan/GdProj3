@@ -100,9 +100,9 @@ class World(DirectObject):
         #print self.env.ls()
         self.players = objects.loadPlayers(self.env)
         collisionHandler=0
-        self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler)
-        self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler)
-        self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler)
+        self.aTrapSpawn = objects.loadTrapAs(self.env, collisionHandler, self.world)
+        self.bTrapSpawn = objects.loadTrapBs(self.env, collisionHandler, self.world)
+        self.ammoSpawn = objects.loadAmmo(self.env, collisionHandler, self.world)
         #objects.loadSpotlights(self.env)
         
         #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH()+180)))
