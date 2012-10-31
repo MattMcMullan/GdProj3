@@ -308,9 +308,9 @@ class Human():
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
         self.character.setGravity(0)
-        self.human.setPos(pos)
+        #self.human.setPos(pos)
         self.human.reparentTo(self.characterNP)
-        self.player.setPos(pos)
+        #self.player.setPos(pos)
         self.player.reparentTo(self.characterNP)
         self.characterNP.setCollideMask(BitMask32.allOn())
         
