@@ -73,41 +73,30 @@ def listNodes(env,prefix):
         nodes.append(node)
         index = index + 1
 def genBulletBoxes(env,world):
+    boxes = list()
     for np in listNodes(env,"Collision_box_"):
         geom = np.node().getGeom(0)
         # get the minimum and maximum points
         vdata = geom.getVertexData()
         vertices = GeomVertexReader(vdata,'vertex')
-        # get the transform
-        #transform = np.getTransform().getMat()
-        
-        #shape = BulletConvexHullShape()
-        #while not vertices.isAtEnd():
-        #    vertex = transform.xformVecGeneral(vertices.getData3f())
-        #    shape.addPoint(LPoint3(vertex[0],vertex[1],vertex[2]))
-        #node = BulletRigidBodyNode('env')
-        #node.addShape(shape)
-        #enp = env.attachNewNode(node)
-        #world.attachRigidBody(node)
-        
         vmin = LPoint3()
         vmax = LPoint3()
         np.calcTightBounds(vmin,vmax)
+        #Create the bullet box with center at (0,0)
         norm = vmax-vmin
         hnorm = LVecBase3(norm[0]*.5,norm[1]*.5,norm[2]*.5)
         shape = BulletBoxShape(hnorm)
+        # create the surrounding nodes
         node = BulletRigidBodyNode('env')
         node.addShape(shape)
         enp = env.attachNewNode(node)
         enp.setPos(vmin+hnorm)
+        # attach it to the world and save it for later
         world.attachRigidBody(node)
-        #cbox = CollisionBox(vmin,vmax)
-        #cnode = CollisionNode("EnvCollide")
-        #cnode.addSolid(cbox)
-        #env.node().getChild(0).addChild(cnode)
-        #path = env.attachNewNode(cnode)
-        #path.show()
+        boxes.append(enp.node())
+        # clean up the environment higherarchy
         np.removeNode()
+    return boxes
 def loadColBoxes(env, handler):
     # traverse through the collision geometry
     for np in listNodes(env,"Collision_box_"):

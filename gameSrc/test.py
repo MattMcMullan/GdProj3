@@ -146,7 +146,7 @@ class World(DirectObject):
             self.world.attachCharacter(self.players[i].player)
         
         #env
-        objects.genBulletBoxes(self.env,self.world)
+        self.envBoxes = objects.genBulletBoxes(self.env,self.world)
         return
         base.cTrav.showCollisions(render)
         #self.pusher = CollisionHandlerEvent()
