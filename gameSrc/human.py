@@ -22,10 +22,22 @@ mousePrevPos    = [0,0]
 class Projectile():
     model = 0
     index = 0
-    def __init__(self, ppos, h, p, parent, parentVel):
+    def __init__(self, ppos, h, p, parent, parentVel, world, worldNP):
         if Projectile.model==0:
             Projectile.model = Model("../assets/3d/Actors/ball_proj1.egg")
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0))
+        pos = ppos
+        shape = BulletSphereShape(5)
+        self.np = worldNP.attachNewNode(BulletRigidBodyNode('Sphere'))
+        #np.node().setMass(1.0)
+        self.np.node().addShape(shape)
+        #np.node().addShape(shape, TransformState.makePos(Point3(0, 1, 0)))
+        self.np.setPos(pos)
+        self.np.setCollideMask(BitMask32.allOn())
+        world.attachRigidBody(self.np.node())
+        self.sphere = self.np.node()
+        self.instance.reparentTo(self.np)
+        
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
         self.vel = parentVel
         self.vel = map(lambda i: dir[i]*100, range(3))
@@ -51,7 +63,7 @@ class Projectile():
             #get the displacement
             dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
             #set the new position
-            self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+            self.np.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
             return task.cont
             
 class floatTrap():
@@ -161,7 +173,7 @@ class Human():
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
     def launch(self):
-        self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel))
+        self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel, self.world, self.worldNP))
     def placeFloatTrap(self):
         self.floatTraps.append(floatTrap(self.player.getPos())) 
     def setKey(self,key,value):

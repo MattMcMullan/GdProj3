@@ -94,7 +94,7 @@ class Player():
         self.projTime += dt
         if self.projTime >= THROWPERIOD:
             self.projTime -= THROWPERIOD
-            self.projectiles.append(Projectile(self.instance.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity))
+            self.projectiles.append(Projectile(self.instance.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity, self.world, self.worldNP))
         return task.cont
     def bulletInit(self,world,pos):
         oldpath = self.instance.find("**/body_coll")
