@@ -20,7 +20,9 @@ from panda3d.bullet import BulletSphereShape
 class Player():
     model = 0
     counter = 0
-    def __init__(self,ppos):
+    def __init__(self,ppos, world, worldNP):
+        self.world = world
+        self.worldNP = worldNP
         if not Player.model:
             Player.model = Model("../assets/3d/Actors/robot rig 10 coll.egg")
             Player.model.modelRoot.find("**/body_coll").show()

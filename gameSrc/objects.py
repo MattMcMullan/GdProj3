@@ -29,10 +29,10 @@ def extractPositions(env,prefix,index=1):
         node.detachNode()
         index = index + 1
 
-def loadPlayers(env):
+def loadPlayers(env,world,worldNP):
     players = list()
     for ppos in extractPositions(env,"PlayerSpawn",2):
-        players.append(Player(ppos))
+        players.append(Player(ppos,world,worldNP))
     return players
 
 def loadTrapAs(env, world, worldNP):

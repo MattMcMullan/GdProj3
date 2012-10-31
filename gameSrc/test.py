@@ -128,12 +128,12 @@ class World(DirectObject):
         self.envBoxes = objects.genBulletBoxes(self.env,self.world)
         #load objects out of the environment
         #human
-        self.mover = Human(self)
+        self.mover = Human(self,self.world,self.worldNP)
         tmp = self.env.find("**/PlayerSpawn1")
         self.mover.bulletInit(self.world,tmp.getPos())
         tmp.detachNode()
         #AI players
-        self.players = objects.loadPlayers(self.env)
+        self.players = objects.loadPlayers(self.env,self.world,self.worldNP)
         for i in range(0,5):
             self.players[i].bulletInit(self.world,self.players[i].instance.getPos())
         

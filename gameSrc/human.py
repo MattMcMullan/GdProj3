@@ -65,7 +65,10 @@ class floatTrap():
         floatTrap.index = floatTrap.index + 1
             
 class Human():
-    def __init__(self,parent):
+    def __init__(self,parent, world, worldNP):
+        self.world = world
+        self.worldNP = worldNP
+        
         self.projectiles = list()
         self.floatTraps = list()
         
