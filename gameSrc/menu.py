@@ -11,15 +11,15 @@ class Menu():
         self.whichfrom = "" #For telling backClicked which menu it came from
         self.font = loader.loadFont("../assets/font/Orbitron Light.otf")
         self.back = OnscreenImage(image = "../assets/2d/title_bg01.png", pos = (0, 0, 0), scale=(1.4,1,1))
-        self.startButton = DirectButton(image = "../assets/2d/buttons/start_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, .3), relief = None, command = self.startClicked)
-        self.rulesButton = DirectButton(image = "../assets/2d/buttons/rules_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.05), relief = None, command = self.rulesClicked)
-        self.optButton = DirectButton(image = "../assets/2d/buttons/opt_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.4), relief = None, command = self.optClicked)
-        self.exitButton = DirectButton(image = "../assets/2d/buttons/exit_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.75), relief = None, command = self.exitClicked)
+        self.startButton = DirectButton(image = "../assets/2d/buttons/start_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, .2), relief = None, command = self.startClicked)
+        self.rulesButton = DirectButton(image = "../assets/2d/buttons/rules_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.2), relief = None, command = self.rulesClicked)
+        #self.optButton = DirectButton(image = "../assets/2d/buttons/opt_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.4), relief = None, command = self.optClicked)
+        self.exitButton = DirectButton(image = "../assets/2d/buttons/exit_on.png", image_scale = (.8, 1, .14), image_pos = (0, 0, -.6), relief = None, command = self.exitClicked)
 
     def startClicked(self):
         self.startButton.destroy()
         self.rulesButton.destroy()
-        self.optButton.destroy()
+        #self.optButton.destroy()
         self.exitButton.destroy()
         self.back.destroy()
         self.parent.beginGame() #This will make the rest of the game happen!
@@ -27,7 +27,7 @@ class Menu():
     def rulesClicked(self):
         self.startButton.destroy()
         self.rulesButton.destroy()
-        self.optButton.destroy()
+        #self.optButton.destroy()
         self.exitButton.destroy()
         self.back.destroy()
         self.back = OnscreenImage(image = "../assets/2d/title_bg02.png", pos = (0, 0, 0), scale=(1.4,1,1))
