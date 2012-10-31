@@ -10,7 +10,7 @@ import collision
 
 class Spawner():
     count = 0
-    def __init__(self,ppos,model,collisionHandler,world):
+    def __init__(self,ppos,model,world):
         self.model = model
         self.physrep = model.createInstance(pos=ppos)
         self.pos = ppos
