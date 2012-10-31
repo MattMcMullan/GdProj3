@@ -86,7 +86,7 @@ class World(DirectObject):
         # World
         #self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
         #self.debugNP.show()
-        #self.debugNP.node().showWireframe(False)
+        #self.debugNP.node().showWireframe(True)
         #self.debugNP.node().showConstraints(False)
         #self.debugNP.node().showBoundingBoxes(False)
         #self.debugNP.node().showNormals(False)

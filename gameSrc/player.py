@@ -86,7 +86,7 @@ class Player():
         #self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
         self.character.setAngularMovement(0)
         self.character.setLinearMovement(self.velocity, True)
-        self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2]-self.radius*.7)
         #if self.id == 0:
         #    print pos[0]+dis[0]
         #    print pos[1]+dis[1]
@@ -99,7 +99,8 @@ class Player():
         return task.cont
     def bulletInit(self,world,pos):
         oldpath = self.instance.find("**/body_coll")
-        shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
+        self.radius = oldpath.node().getSolid(0).getRadius()
+        shape = BulletSphereShape(self.radius)
         self.character = BulletCharacterControllerNode(shape, 0.4, 'AI'+str(Player.counter))
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
@@ -123,5 +124,5 @@ class Player():
         return
 
     def impact(self,vel):
-        diff = map(lambda i: self.vel[i]-vel[i], range(3))
-        self.vel = map(lambda i: self.vel[i]-diff[i], range(3))
+        diff = map(lambda i: self.velocity[i]-vel[i], range(3))
+        self.velocity = map(lambda i: self.velocity[i]-diff[i], range(3))
