@@ -43,7 +43,6 @@ crosshair = OnscreenImage(image = 'crosshair.png', pos = (0, 0, 0.02),scale=(.00
 class World(DirectObject):
     global traverser, queue
     def __init__(self):
-
         startMenu = menu.Menu(self)
     
     #Please do not remove this function, it makes the menu work.
@@ -130,7 +129,7 @@ class World(DirectObject):
         self.debugNP.node().showBoundingBoxes(False)
         self.debugNP.node().showNormals(True)
         self.world = BulletWorld()
-        self.world.setGravity(Vec3(0, 0, -9.81))
+        self.world.setGravity(Vec3(0, 0, 0))
         self.world.setDebugNode(self.debugNP.node())
         
         #player

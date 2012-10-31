@@ -192,7 +192,6 @@ class Human():
         node.setMass(1.0)
         node.addShape(shape)
         np = render.attachNewNode(node)
-        np.setPos(0, 0, 2)
         world.attachRigidBody(node)
         self.human.reparentTo(np)
         self.player.reparentTo(np)

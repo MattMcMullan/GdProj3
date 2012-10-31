@@ -19,9 +19,8 @@ from spawner import Spawner
 from model import Model
 import lights
 
-def extractPositions(env,prefix):
+def extractPositions(env,prefix,index=1):
     positions = list()
-    index = 1
     while 1:
         node = env.find("**/"+prefix+str(index))
         if node.getNumNodes()<1:
@@ -32,7 +31,7 @@ def extractPositions(env,prefix):
 
 def loadPlayers(env):
     players = list()
-    for ppos in extractPositions(env,"PlayerSpawn"):
+    for ppos in extractPositions(env,"PlayerSpawn",2):
         players.append(Player(ppos))
     return players
 
