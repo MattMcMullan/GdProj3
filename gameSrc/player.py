@@ -12,12 +12,17 @@ import threading
 from model import Model
 from human import Projectile
 
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletCharacterControllerNode
+from panda3d.bullet import BulletCapsuleShape
+from panda3d.bullet import ZUp
+
 class Player():
     model = 0
     counter = 0
     def __init__(self,ppos):
         if not Player.model:
-            Player.model = Model("../assets/3d/Actors/robot_rig_basic_coll.egg")
+            Player.model = Model("../assets/3d/Actors/robot rig 10 coll.egg")
             Player.model.modelRoot.find("**/body_coll").show()
         self.instance = Player.model.createInstance(pos=ppos)
         
@@ -28,11 +33,15 @@ class Player():
         self.projectiles = list()
         self.projTime = 0.0
         
-        pnode = ModelRoot("player")
-        self.player = render.attachNewNode(pnode)
-        pc = self.player.attachNewNode(CollisionNode("playerCollision"))
-        pc.node().addSolid(CollisionRay(0,0,-1,0,0,1))
-        self.playerCnode = pc
+        #pnode = ModelRoot("player")
+        #self.player = render.attachNewNode(pnode)
+        #pc = self.player.attachNewNode(CollisionNode("playerCollision"))
+        #pc.node().addSolid(CollisionRay(0,0,-1,0,0,1))
+        #self.playerCnode = pc
+        
+        shape = BulletCapsuleShape(1,1,ZUp)
+        
+        self.player = BulletCharacterControllerNode(shape, 0.4, 'AI')
         
         self.id = Player.counter
         Player.counter = Player.counter + 1
@@ -74,8 +83,11 @@ class Player():
         #get displacement
         dis = (self.velocity[0]*dt,self.velocity[1]*dt,self.velocity[2]*dt)
         #update position
-        self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
-        self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
+        #self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        #self.instance.setPos(self.player.getX(),self.player.getY(),self.player.getZ())
+        self.player.setAngularMovement(0)
+        self.player.setLinearMovement(self.velocity, True)
+        self.instance.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
         #if self.id == 0:
         #    print pos[0]+dis[0]
         #    print pos[1]+dis[1]
@@ -84,7 +96,7 @@ class Player():
         self.projTime += dt
         if self.projTime >= THROWPERIOD:
             self.projTime -= THROWPERIOD
-            self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity))
+            self.projectiles.append(Projectile(self.instance.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity))
         return task.cont
     def bulletInit(self,world):
         #oldpath = self.human.find("**/body_coll")
