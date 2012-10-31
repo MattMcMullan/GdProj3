@@ -23,6 +23,7 @@ class Projectile():
     model = 0
     index = 0
     def __init__(self, ppos, h, p, parent, parentVel, world, worldNP):
+        self.world=world
         if Projectile.model==0:
             Projectile.model = Model("../assets/3d/Actors/ball_proj1.egg")
         self.instance = Projectile.model.createInstance(pos=ppos,hpr=(h,p,0),scale=3)
@@ -45,7 +46,6 @@ class Projectile():
         self.np.setPos(ppos)
         self.np.setCollideMask(BitMask32.allOn())
         world.attachRigidBody(self.sphere)
-        self.instance.show()
         
         dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
         self.vel = parentVel
@@ -61,10 +61,21 @@ class Projectile():
         dt = task.time-self.prevTime
         #If the projectile exceeds its maximum lifetime or burns out on the arena bounds -
         self.lifeTime += dt
+        contacts = self.world.contactTest(self.sphere).getContacts()
+        if len(contacts)>0:
+            contact = contacts[0]
+            #name = contact.getName()
+            #print name
+            self.instance.removeNode()
+            self.parent.projectiles.remove(self)
+            self.world.removeRigidBody(self.sphere)
+            #self.world.
+            return
         if(self.lifeTime >= self.TIMEDLIFE):
             #kill projectile
             self.instance.removeNode()
             self.parent.projectiles.remove(self)
+            self.world.removeRigidBody(self.sphere)
             #print "Projectile removed"
         if(self.lifeTime < self.TIMEDLIFE):
             #get the position
@@ -79,7 +90,8 @@ class Projectile():
 class floatTrap():
     model = 0
     index = 0
-    def __init__(self, ppos):
+    def __init__(self, ppos, world, worldNP):
+        self.world = world
         if floatTrap.model==0:
             floatTrap.model = Model("../assets/3d/Actors/beartrap2.egg")
         h = deg2Rad(camera.getH())
@@ -88,7 +100,32 @@ class floatTrap():
         npos = map(lambda i: ppos[i]+dir[i]*25, range(3))
         self.instance = floatTrap.model.createInstance(pos=npos,hpr=(0,0,0))
         self.index = floatTrap.index
+        
+        pmin = LPoint3()
+        pmax = LPoint3()
+        self.instance.calcTightBounds(pmin,pmax)
+        norm = pmin-pmax
+        self.off = (norm[0]*.5,norm[1]*.5,norm[2]*.5)
+        r = max(norm)
+        shape = BulletSphereShape(.7*r)
+        self.sphere = BulletRigidBodyNode('Sphere')
+        self.sphere.addShape(shape)
+        self.sphere.setMass(1.0)
+        self.sphere.setDeactivationEnabled(False)
+        self.np = worldNP.attachNewNode(self.sphere)
+        self.np.setPos(LVecBase3(npos[0],npos[1],npos[2]))
+        self.np.setCollideMask(BitMask32.allOn())
+        world.attachRigidBody(self.sphere)
+        
+        taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
         floatTrap.index = floatTrap.index + 1
+        #pos = self.instance.getPos()
+        #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
+    def check(self,task):
+        contacts = self.world.contactTest(self.sphere).getContacts()
+        if len(contacts)>0:
+            print contacts
+        return task.cont
             
 class Human():
     def __init__(self,parent, world, worldNP):
@@ -120,8 +157,15 @@ class Human():
         taskMgr.add(self.mouseTask, 'mouseTask')
         self.parent = parent
         #self.human = self.parent.human
-        self.human = collision.loadAndPositionModelFromFile("../assets/3d/Actors/robot_rig_basic_coll.egg",scale=.07,show=0)
-        self.human.flattenLight()
+        #self.human = collision.loadAndPositionModelFromFile("../assets/3d/Actors/robot rig 10 coll.egg",scale=.07,show=0)
+        self.human = Actor('../assets/3d/Actors/robot_idle_final_actor.egg', {
+          'idle':'../assets/3d/Actors/robot_idle_final_anim.egg',
+        #  'throw':'../assets/3d/Actors/animation eggs/robot_throw_final.egg',
+        #  'place':'../assets/3d/Actors/animation eggs/robot_place_final.egg',
+        #  'death':'../assets/3d/Actors/animation eggs/robot_death_final.egg',
+        })
+        #print self.human.find("**/eyes_sphere").getPos()
+        #self.human.flattenLight()
         print self.human.ls()
         #self.human.node().getChild(0).removeChild(0)
         self.human.setH(camera.getH()+180)
@@ -147,12 +191,14 @@ class Human():
         pc.node().addSolid(CollisionRay(0,0,-1,0,0,1))
         self.playerCnode = pc
         self.player.setPos(0,0,1)
-        
+        #self.human.play('idle')
+        self.human.loop('idle')
     def fpMove(self,task):
         dt = task.time-self.prevTime
         #self.human.setZ(self.player.getZ()-.5)
         #if not self.parent.editMode:
         camera.setPos(self.player.getPos()+(0,0,1))
+        #camera.setPos(self.player.getPos()-(0.0264076, 4.60993, -10.0715))
         damp = (1.-(.2*dt))
         self.vel = map(lambda x: damp*x, self.vel)
         self.prevTime = task.time
@@ -189,7 +235,7 @@ class Human():
     def launch(self):
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel, self.world, self.worldNP))
     def placeFloatTrap(self):
-        self.floatTraps.append(floatTrap(self.player.getPos())) 
+        self.floatTraps.append(floatTrap(self.player.getPos(),self.world,self.worldNP)) 
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
@@ -219,7 +265,7 @@ class Human():
         return Task.cont
     def bulletInit(self,world,pos):
         oldpath = self.human.find("**/body_coll")
-        shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
+        shape = BulletSphereShape(10)#oldpath.node().getSolid(0).getRadius())
         self.character = BulletCharacterControllerNode(shape, 0.4, 'Human')
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])

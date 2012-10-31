@@ -24,7 +24,7 @@ class Player():
         self.world = world
         self.worldNP = worldNP
         if not Player.model:
-            Player.model = Model("../assets/3d/Actors/robot rig 10 coll.egg")
+            Player.model = Model("../assets/3d/Actors/robot rig 10 coll.egg")#NPC_robot_mesh.egg")
             Player.model.modelRoot.find("**/body_coll").show()
         self.instance = Player.model.createInstance(pos=ppos)
         

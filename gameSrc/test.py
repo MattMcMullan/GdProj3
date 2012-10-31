@@ -39,7 +39,6 @@ crosshair = OnscreenImage(image = 'crosshair.png', pos = (0, 0, 0.02),scale=(.00
 
 #collision.setupMousePicker('mouseraycnode',collisionHandler)
 
-
 class World(DirectObject):
     global traverser, queue
     def __init__(self):
@@ -121,7 +120,7 @@ class World(DirectObject):
     def loadModels(self):
         """ loads initial models into the world """
         # create the environment
-        self.env = collision.loadAndPositionModelFromFile("../assets/3d/Actors/arena collision type none.egg")
+        self.env = collision.loadAndPositionModelFromFile("../assets/3d/mayaActors/arena_collisions_nogrid.egg")
         self.envBoxes = objects.genBulletBoxes(self.env,self.world)
         #load objects out of the environment
         #human
