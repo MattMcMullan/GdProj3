@@ -45,6 +45,7 @@ class Spawner():
         self.world = world
         self.np = np
         self.hidden = 0
+        self.count = Spawner.count
         #taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
         Spawner.count = Spawner.count + 1
     def ammoCollide(self,object,mover):
@@ -59,6 +60,39 @@ class Spawner():
         self.hidden = 1
         self.world.removeRigidBody(self.np.node())
         self.physrep.hide()
+        taskMgr.doMethodLater(30,self.regen,'ammoRegen'+str(self.count))
+        return
+    def regen(self,task):
+        self.hidden = 0
+        self.world.attachRigidBody(self.np.node())
+        self.physrep.show()
+    def trap1Collide(self,object,mover):
+        if self.hidden==1:
+            return
+        contactObject = object[0].getNode0()
+        if object[0].getNode0().getName()=="Sphere":
+            contactObject = object[0].getNode1()
+        name = contactObject.getName()
+        if name==mover.character.getName():
+            mover.parent.overlay.wepAmmo[1] = mover.parent.overlay.wepAmmo[1]+10
+        self.hidden = 1
+        self.world.removeRigidBody(self.np.node())
+        self.physrep.hide()
+        taskMgr.doMethodLater(30,self.regen,'trap1Regen'+str(self.count))
+        return
+    def trap2Collide(self,object,mover):
+        if self.hidden==1:
+            return
+        contactObject = object[0].getNode0()
+        if object[0].getNode0().getName()=="Sphere":
+            contactObject = object[0].getNode1()
+        name = contactObject.getName()
+        if name==mover.character.getName():
+            mover.parent.overlay.wepAmmo[2] = mover.parent.overlay.wepAmmo[2]+10
+        self.hidden = 1
+        self.world.removeRigidBody(self.np.node())
+        self.physrep.hide()
+        taskMgr.doMethodLater(30,self.regen,'trap2Regen'+str(self.count))
         return
     def update(self, task):
         if not self.physrep.getParent()==render:
