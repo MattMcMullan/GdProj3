@@ -20,6 +20,7 @@ import collision
 class Spawner():
     count = 0
     def __init__(self,ppos,model,world, worldNP):
+        self.prevTime = 0
         self.model = model
         self.physrep = model.createInstance(pos=ppos)
         self.pos = ppos
@@ -47,6 +48,7 @@ class Spawner():
         self.np = np
         self.hidden = 0
         self.count = Spawner.count
+        taskMgr.add(self.update,"SpawnerUpdate"+str(self.count))
         #taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
         Spawner.count = Spawner.count + 1
     def ammoCollide(self,object,mover):
@@ -96,7 +98,8 @@ class Spawner():
         taskMgr.doMethodLater(30,self.regen,'trap2Regen'+str(self.count))
         return
     def update(self, task):
-        if not self.physrep.getParent()==render:
-            print "DEAD!"
+        dt = task.time-self.prevTime
+        self.physrep.setH(self.physrep.getH()+dt*45)
+        self.prevTime = task.time
         return task.cont
     
