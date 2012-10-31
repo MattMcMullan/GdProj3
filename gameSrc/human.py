@@ -9,6 +9,12 @@ from math import sin
 from math import cos
 import collision
 from model import Model
+from panda3d.bullet import BulletWorld
+from panda3d.bullet import BulletPlaneShape
+from panda3d.bullet import BulletBoxShape
+from panda3d.bullet import BulletSphereShape
+from panda3d.bullet import BulletRigidBodyNode
+from panda3d.bullet import BulletDebugNode
 
 mousePos       = [0,0] 
 mousePrevPos    = [0,0] 
@@ -85,6 +91,8 @@ class Human():
         self.parent = parent
         #self.human = self.parent.human
         self.human = collision.loadAndPositionModelFromFile("../assets/3d/Actors/robot_rig_basic_coll.egg",scale=.07,show=0)
+        self.human.flattenLight()
+        print self.human.ls()
         #self.human.node().getChild(0).removeChild(0)
         self.human.setH(camera.getH()+180)
         campos = self.human.getPos()
@@ -117,7 +125,7 @@ class Human():
         camera.setPos(self.player.getPos()+(0,0,1))
         
         self.prevTime = task.time
-        pos = self.player.getPos()
+        pos = self.player.getParent().getPos()
         delta = 10*dt
         h = deg2Rad(camera.getH())
         p = deg2Rad(camera.getP())
@@ -142,7 +150,7 @@ class Human():
         #get displacement
         dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
         #set the new position
-        self.player.setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        self.player.getParent().setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
         self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
@@ -177,6 +185,18 @@ class Human():
         self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH()+180)))
         
         return Task.cont
+    def bulletInit(self,world):
+        oldpath = self.human.find("**/body_coll")
+        shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
+        node = BulletRigidBodyNode('PlayerCollide')
+        node.setMass(1.0)
+        node.addShape(shape)
+        np = render.attachNewNode(node)
+        np.setPos(0, 0, 2)
+        world.attachRigidBody(node)
+        self.human.reparentTo(np)
+        self.player.reparentTo(np)
+        camera.reparentTo(self.human)
     def addCollisions(self,handler,name):
         print self.human.ls()
         path = self.human.find("**/"+name)
