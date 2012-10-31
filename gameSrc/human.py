@@ -120,7 +120,6 @@ class Human():
         self.player.setPos(0,0,1)
         
     def fpMove(self,task):
-        return
         dt = task.time-self.prevTime
         #self.human.setZ(self.player.getZ()-.5)
         #if not self.parent.editMode:
@@ -148,13 +147,13 @@ class Human():
                 elif weapon == 1:
                     self.placeFloatTrap()
             self.keymap["m1"] = 0
-        
+        self.character.setLinearMovement(LVector3(self.vel[0],self.vel[1],self.vel[2]),0)
         #get displacement
-        dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
+        #dis = (self.vel[0]*dt,self.vel[1]*dt,self.vel[2]*dt)
         #set the new position
-        self.player.getParent().setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
-        self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
-        self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
+        #self.player.getParent().setPos(pos[0]+dis[0],pos[1]+dis[1],pos[2]+dis[2])
+        #self.human.setX(self.player.getX()+sin(deg2Rad(camera.getH())+math.pi))
+        #self.human.setY(self.player.getY()-cos(deg2Rad(camera.getH())+math.pi))
         return task.cont
     def launch(self):
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel))
@@ -192,9 +191,11 @@ class Human():
         shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
         self.character = BulletCharacterControllerNode(shape, 0.4, 'Human')
         self.characterNP = render.attachNewNode(self.character)
-        self.human.reparentTo(self.characterNP)
-        self.player.reparentTo(self.characterNP)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
+        self.human.setPos(pos)
+        self.human.reparentTo(self.characterNP)
+        self.player.setPos(pos)
+        self.player.reparentTo(self.characterNP)
         self.characterNP.setCollideMask(BitMask32.allOn())
         
         world.attachCharacter(self.character)
