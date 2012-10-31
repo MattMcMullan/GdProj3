@@ -78,21 +78,22 @@ class World(DirectObject):
         #render.setAntialias(AntialiasAttrib.MMultisample,1)
         self.filters = CommonFilters(base.win, base.cam)
         self.filters.setBloom(blend=(1,0,0,1), desat=-0.5, intensity=6.0, size=2)
+        #self.filters.setAmbientOcclusion()
         #self.filters.setCartoonInk()
     def setupBullet(self):
         taskMgr.add(self.update, 'updateWorld')
         self.worldNP = render.attachNewNode('World')
         # World
-        self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
-        self.debugNP.show()
-        self.debugNP.node().showWireframe(True)
-        self.debugNP.node().showConstraints(True)
-        self.debugNP.node().showBoundingBoxes(False)
-        self.debugNP.node().showNormals(True)
+        #self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
+        #self.debugNP.show()
+        #self.debugNP.node().showWireframe(False)
+        #self.debugNP.node().showConstraints(False)
+        #self.debugNP.node().showBoundingBoxes(False)
+        #self.debugNP.node().showNormals(False)
         
         self.world = BulletWorld()
         self.world.setGravity(Vec3(0, 0, 0))
-        self.world.setDebugNode(self.debugNP.node())
+        #self.world.setDebugNode(self.debugNP.node())
         
     def update(self, task):
         dt = globalClock.getDt()
