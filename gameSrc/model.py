@@ -16,7 +16,7 @@ class Model():
 		copy = self.modelRoot.instanceTo(nnode)
 		copy = nnode
 		copy.reparentTo(render)
-		nnode.setPos(pos)
+		nnode.setPos(LVecBase3(pos[0],pos[1],pos[2]))
 		nnode.setHpr(hpr)
 		nnode.setScale(scale)
 		if (not show):
