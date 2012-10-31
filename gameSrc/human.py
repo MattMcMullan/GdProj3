@@ -129,15 +129,96 @@ class floatTrap():
         floatTrap.index = floatTrap.index + 1
         #pos = self.instance.getPos()
         #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
+    def kill(self):
+        floatTrap.traps.remove(self)
+        self.world.removeGhost(self.sphere)
+        self.instance.detachNode()
     def check(self,contacts,human,players):
         if len(contacts)>0:
             contactObject = contacts[0].getNode0()
             if contacts[0].getNode0().getName()=="TrapSphere":
                 contactObject = contacts[0].getNode1()
+            name = contactObject.getName()
             print contactObject
+            if name==human.character.getName():
+                human.trap1()
+                self.kill()
+                return
+            for i in range(len(players)):
+                if name==players[i].character.getName():
+                    players[i].trap1()
+                    self.kill()
+                    return
+
+class clawTrap():
+    traps = list()
+    model = 0
+    index = 0
+    def __init__(self, world, worldNP):
+        self.failed = 1
+        self.world = world
+        if floatTrap.model==0:
+            floatTrap.model = Model("../assets/3d/Actors/claw3.egg")
+        h = deg2Rad(camera.getH())
+        p = deg2Rad(camera.getP())
+        dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
+        cpos = camera.getPos()
+        vec = map(lambda i: cpos[i]+dir[i]*200, range(3))
+        rayHit = world.rayTestClosest(cpos,LPoint3(vec[0],vec[1],vec[2]))
+        if not rayHit.hasHit():
+            return
+        npos = rayHit.getHitPos()
+        n = rayHit.getHitNormal()
+        print n
+        #npos = map(lambda i: ppos[i]+dir[i]*25, range(3))
+        self.instance = floatTrap.model.createInstance(pos=npos,hpr=(-90*n.x,180*(n.z==1)+90*(abs(n.x)+n.y),0))
+        self.index = floatTrap.index
+        
+        pmin = LPoint3()
+        pmax = LPoint3()
+        self.instance.calcTightBounds(pmin,pmax)
+        norm = pmin-pmax
+        self.off = (norm[0]*.5,norm[1]*.5,norm[2]*.5)
+        r = max(norm)
+        shape = BulletSphereShape(.7*r)
+        self.sphere = BulletGhostNode('TrapSphere')
+        self.sphere.addShape(shape)
+        self.sphere.setDeactivationEnabled(False)
+        self.np = worldNP.attachNewNode(self.sphere)
+        self.np.setPos(LVecBase3(npos[0],npos[1],npos[2]))
+        self.np.setCollideMask(BitMask32.allOn())
+        world.attachGhost(self.sphere)
+        
+        #taskMgr.add(self.check,"floatTrap"+str(self.index)+"Check")
+        floatTrap.traps.append(self)
+        floatTrap.index = floatTrap.index + 1
+        self.failed = 0
+        #pos = self.instance.getPos()
+        #self.np.setPos(pos[0]-self.off[0],pos[1]-self.off[1],pos[2]-self.off[2])
+    def kill(self):
+        floatTrap.traps.remove(self)
+        self.world.removeGhost(self.sphere)
+        self.instance.detachNode()
+    def check(self,contacts,human,players):
+        if len(contacts)>0:
+            contactObject = contacts[0].getNode0()
+            if contacts[0].getNode0().getName()=="TrapSphere":
+                contactObject = contacts[0].getNode1()
+            name = contactObject.getName()
+            print contactObject
+            if name==human.character.getName():
+                human.trap1()
+                self.kill()
+                return
+            for i in range(len(players)):
+                if name==players[i].character.getName():
+                    players[i].trap1()
+                    self.kill()
+                    return
             
 class Human():
     def __init__(self,parent, world, worldNP):
+        self.traptime = 0
         self.world = world
         self.worldNP = worldNP
         
@@ -204,24 +285,26 @@ class Human():
         self.human.loop('idle')
     def fpMove(self,task):
         dt = task.time-self.prevTime
-        #self.human.setZ(self.player.getZ()-.5)
-        #if not self.parent.editMode:
         camera.setPos(self.player.getPos()+(0,0,1))
-        #camera.setPos(self.player.getPos()-(0.0264076, 4.60993, -10.0715))
         damp = (1.-(.2*dt))
         self.vel = map(lambda x: damp*x, self.vel)
+        if self.traptime>0:
+            self.traptime = self.traptime-dt
+        #self.human.setZ(self.player.getZ()-.5)
+        #if not self.parent.editMode:
+        #camera.setPos(self.player.getPos()-(0.0264076, 4.60993, -10.0715))
         self.prevTime = task.time
         pos = self.player.getParent().getPos()
         delta = 10*dt
         h = deg2Rad(camera.getH())
         p = deg2Rad(camera.getP())
-        if self.keymap["up"]:
+        if self.keymap["up"] and self.traptime<=0:
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
             self.vel = map(lambda i: self.vel[i]+dir[i]*delta, range(3))
-        if self.keymap["down"]:
+        if self.keymap["down"] and self.traptime<=0:
             dir = (-cos(p)*sin(h), cos(p)*cos(h), sin(p))
             self.vel = map(lambda i: self.vel[i]-dir[i]*delta, range(3))
-        if self.keymap["m1"]:
+        if self.keymap["m1"] and self.traptime<=0:
             weapon = self.parent.overlay.wepCounter
             if self.parent.overlay.wepAmmo[weapon] > 0:
                 self.parent.overlay.changeAmmo(weapon, -1)
@@ -231,6 +314,8 @@ class Human():
                     self.vel = map(lambda i: self.vel[i]-dir[i]*100, range(3))
                 elif weapon == 1:
                     self.placeFloatTrap()
+                elif weapon == 2:
+                    self.placeClawTrap()
             self.keymap["m1"] = 0
         self.character.setAngularMovement(0)
         self.character.setLinearMovement(LVector3(self.vel[0],self.vel[1],self.vel[2]),True)
@@ -245,6 +330,10 @@ class Human():
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel, self.world, self.worldNP))
     def placeFloatTrap(self):
         self.floatTraps.append(floatTrap(self.player.getPos(),self.world,self.worldNP)) 
+    def placeClawTrap(self):
+        trap = clawTrap(self.world,self.worldNP)
+        weapon = self.parent.overlay.wepCounter
+        self.parent.overlay.changeAmmo(weapon, trap.failed)
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
@@ -300,3 +389,8 @@ class Human():
         self.human.node().getChild(0).removeChild(0)
         self.filters.setInverted()
         print "You Died!"
+    def trap1(self):
+        self.vel = map(lambda x: x*.25, self.vel)
+        self.traptime = self.traptime + 20
+        return
+        

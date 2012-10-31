@@ -112,3 +112,5 @@ class Player():
         base.cTrav.removeCollider(self.wheelsphere)
         self.instance.node().getChild(0).removeChild(0)
         print "Computer player eliminated!"
+    def trap1(self):
+        return

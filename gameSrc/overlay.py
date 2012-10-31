@@ -13,7 +13,7 @@ class Overlay():
         self.font = loader.loadFont("../assets/font/Orbitron Light.otf")
         self.momPercent = 100
         self.wepCounter = 0
-        self.wepAmmo = [30, 5, 0]
+        self.wepAmmo = [30, 5, 2]
         self.lefthudback = OnscreenImage(image = "../assets/2d/icons/hudback.png", pos = (-1.05, 0, -.9), scale=(.3,1,.2))
         self.righthudback = OnscreenImage(image = "../assets/2d/icons/hudbackR.png", pos = (1.05, 0, -.9), scale=(.3,1,.2))
         self.percentDisplay = OnscreenText(text = "%s %s" % (self.momPercent, "%"), fg = (0,1,1,1), pos = (-1.05, -.9), scale = .125, font = self.font)
