@@ -103,6 +103,17 @@ class World(DirectObject):
         for i in self.aTrapSpawn:
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
+                print "atrap"
+                print contacts
+        for i in self.bTrapSpawn:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                print "btrap"
+                print contacts
+        for i in self.ammoSpawn:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                print "ammo"
                 print contacts
         
         #self.processInput(dt)
