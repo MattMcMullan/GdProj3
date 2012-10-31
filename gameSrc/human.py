@@ -79,10 +79,24 @@ class Projectile():
 class floatTrap():
     model = 0
     index = 0
-    def __init__(self, ppos):
+    def __init__(self, ppos, world, worldNP):
         if floatTrap.model==0:
             floatTrap.model = Model("../assets/3d/Actors/beartrap2.egg")
         self.instance = floatTrap.model.createInstance(pos=ppos,hpr=(0,0,0))
+        pos = ppos
+        shape = BulletSphereShape(3)
+        self.np = worldNP.attachNewNode(BulletRigidBodyNode('Sphere'))
+        #np.node().setMass(1.0)
+        #self.np.node().addShape(shape)
+        self.np.node().addShape(shape, TransformState.makePos(Point3(0, 1, 0)))
+        self.np.setPos(pos[0], pos[1] - 1, pos[2] + 2.5)
+        self.np.setCollideMask(BitMask32.allOn())
+        world.attachRigidBody(self.np.node())
+        self.sphere = self.np.node()
+        newNode = render.attachNewNode("junk")
+        self.instance.reparentTo(newNode)
+        self.np.reparentTo(newNode)
+        
         self.index = floatTrap.index
         floatTrap.index = floatTrap.index + 1
             
@@ -185,7 +199,7 @@ class Human():
     def launch(self):
         self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(camera.getH()),deg2Rad(camera.getP()),self,self.vel, self.world, self.worldNP))
     def placeFloatTrap(self):
-        self.floatTraps.append(floatTrap(self.player.getPos())) 
+        self.floatTraps.append(floatTrap(self.player.getPos(), self.world, self.worldNP)) 
     def setKey(self,key,value):
         self.keymap[key] = value
     def mouseTask(self,task): 
