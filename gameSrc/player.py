@@ -86,6 +86,17 @@ class Player():
             self.projTime -= THROWPERIOD
             self.projectiles.append(Projectile(self.player.getPos(),deg2Rad(180+angle),deg2Rad(angle2),self,self.velocity))
         return task.cont
+    def bulletInit(self,world):
+        #oldpath = self.human.find("**/body_coll")
+        shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
+        node = BulletRigidBodyNode('body_coll')
+        node.setMass(1.0)
+        node.addShape(shape)
+        np = render.attachNewNode(node)
+        np.setPos(0, 0, 2)
+        world.attachRigidBody(node)
+        #self.human.reparentTo(np)
+        self.player.reparentTo(np)        
     def normalize(self, vector):
         return vector / sqrt(pow(vector[0],2) + pow(vector[1], 2) + pow(vector[2], 2))
     def die(self,event):

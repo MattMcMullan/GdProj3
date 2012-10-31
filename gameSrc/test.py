@@ -67,7 +67,6 @@ class World(DirectObject):
                 
         self.overlay = overlay.Overlay(self)
         #self.ball = ball.Ball(self)
-
         self.onRay = list()
         self.offRay = list()
         self.activeRay = list()
@@ -123,7 +122,6 @@ class World(DirectObject):
         taskMgr.add(self.update, 'updateWorld')
         
         self.worldNP = render.attachNewNode('World')
-
         # World
         self.debugNP = self.worldNP.attachNewNode(BulletDebugNode('Debug'))
         self.debugNP.show()
@@ -131,14 +129,12 @@ class World(DirectObject):
         self.debugNP.node().showConstraints(True)
         self.debugNP.node().showBoundingBoxes(False)
         self.debugNP.node().showNormals(True)
-        
         self.world = BulletWorld()
         self.world.setGravity(Vec3(0, 0, -9.81))
         self.world.setDebugNode(self.debugNP.node())
         
         #player
         self.mover.bulletInit(self.world)
-        
         #env
         objects.genBulletBoxes(self.env,self.world)
         return
