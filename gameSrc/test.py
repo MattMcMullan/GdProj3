@@ -117,7 +117,7 @@ class World(DirectObject):
 
         #self.processInput(dt)
         #self.world.doPhysics(dt)
-        self.world.doPhysics(dt, 5, 1.0/180.0)
+        self.world.doPhysics(dt,1)
 
         return task.cont
     def setupCollisions(self):
