@@ -42,9 +42,24 @@ class Spawner():
         # spawnNodePath = render.attachNewNode(spawnNode)
         # #base.cTrav.addCollider(spawnNodePath,collisionHandler)
         # spawnNodePath.show()
-        
+        self.world = world
+        self.np = np
+        self.hidden = 0
         #taskMgr.add(self.update,"SpawnerTask"+str(Spawner.count))
         Spawner.count = Spawner.count + 1
+    def ammoCollide(self,object,mover):
+        if self.hidden==1:
+            return
+        contactObject = object[0].getNode0()
+        if object[0].getNode0().getName()=="Sphere":
+            contactObject = object[0].getNode1()
+        name = contactObject.getName()
+        if name==mover.character.getName():
+            mover.parent.overlay.wepAmmo[0] = mover.parent.overlay.wepAmmo[0]+10
+        self.hidden = 1
+        self.world.removeRigidBody(self.np.node())
+        self.physrep.hide()
+        return
     def update(self, task):
         if not self.physrep.getParent()==render:
             print "DEAD!"

@@ -114,6 +114,7 @@ class World(DirectObject):
             contacts = self.world.contactTest(i.sphere).getContacts()
             if len(contacts)>0:
                 print "ammo"
+                i.ammoCollide(contacts,self.mover)
                 print contacts
         
         #self.processInput(dt)

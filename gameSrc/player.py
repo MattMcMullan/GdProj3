@@ -99,7 +99,7 @@ class Player():
     def bulletInit(self,world,pos):
         oldpath = self.instance.find("**/body_coll")
         shape = BulletSphereShape(oldpath.node().getSolid(0).getRadius())
-        self.character = BulletCharacterControllerNode(shape, 0.4, 'AI')
+        self.character = BulletCharacterControllerNode(shape, 0.4, 'AI'+str(Player.counter))
         self.characterNP = render.attachNewNode(self.character)
         self.characterNP.setPos(pos[0],pos[1],pos[2])
         self.character.setGravity(0)
