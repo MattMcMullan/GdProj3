@@ -101,7 +101,7 @@ class World(DirectObject):
         dt = globalClock.getDt()
 
         for i in self.aTrapSpawn:
-            print self.world.contactTest(i.sphere)
+            print self.world.contactTest(i.sphere).getContacts()
         
         #self.processInput(dt)
         #self.world.doPhysics(dt)
