@@ -50,6 +50,14 @@ class World(DirectObject):
     
     #Please do not remove this function, it makes the menu work.
     def beginGame(self):
+        """beginGame
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            What would normalley be the contants of __init__. Called only after the menu.
+        """
         self.configurePanda()
         camera.setPosHpr(0, -15, 0, 0, 0, 0) # x,y,z,heading, pitch, roll
         #world init
@@ -66,6 +74,14 @@ class World(DirectObject):
         self.offRay = list()
         self.activeRay = list()
     def configurePanda(self):
+        """configurePanda
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Set the rendering and display options for panda.
+        """
         props = WindowProperties()
         props.setCursorHidden(True) 
         #props.setSize(1440, 900)
@@ -81,6 +97,14 @@ class World(DirectObject):
         #self.filters.setAmbientOcclusion()
         #self.filters.setCartoonInk()
     def setupBullet(self):
+        """setupBullet
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Initialize bullet and (if needed) the bullet debug renderer.
+        """
         taskMgr.add(self.update, 'updateWorld')
         self.worldNP = render.attachNewNode('World')
         # World
@@ -95,35 +119,15 @@ class World(DirectObject):
         self.world.setGravity(Vec3(0, 0, 0))
         #self.world.setDebugNode(self.debugNP.node())
         
-    def update(self, task):
-        dt = globalClock.getDt()
-
-        for i in self.aTrapSpawn:
-            contacts = self.world.contactTest(i.sphere).getContacts()
-            if len(contacts)>0:
-                i.trap1Collide(contacts,self.mover)
-        for i in self.bTrapSpawn:
-            contacts = self.world.contactTest(i.sphere).getContacts()
-            if len(contacts)>0:
-                i.trap2Collide(contacts,self.mover)
-        for i in self.ammoSpawn:
-            contacts = self.world.contactTest(i.sphere).getContacts()
-            if len(contacts)>0:
-                i.ammoCollide(contacts,self.mover)
-        for i in human.floatTrap.traps:
-            contacts = self.world.contactTest(i.sphere).getContacts()
-            if len(contacts)>0:
-                i.check(contacts,self.mover,self.players)
-        for i in human.clawTrap.traps:
-            contacts = self.world.contactTest(i.sphere).getContacts()
-            if len(contacts)>0:
-                i.check(contacts,self.mover,self.players)
-        
-        self.world.doPhysics(dt,1)
-        
-        return task.cont
     def loadModels(self):
-        """ loads initial models into the world """
+        """loadModels
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Loads the models and related collisions. Most game init goes here.
+        """
         # create the environment
         self.env = collision.loadAndPositionModelFromFile("../assets/3d/mayaActors/arena_collisions_nogrid.egg")
         self.envBoxes = objects.genBulletBoxes(self.env,self.world)
@@ -148,7 +152,14 @@ class World(DirectObject):
         self.env.flattenStrong()
         render.analyze()
     def setupLights(self):
-        """loads initial lighting"""
+        """setupLights
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Stick in some general lights.
+        """
         self.ambientLight = lights.setupAmbientLight()
         
         self.dirLight = DirectionalLight("dirLight")
@@ -161,6 +172,46 @@ class World(DirectObject):
         
         #panda2 = collision.loadAndPositionModelFromFile("panda-model",scale=.005,pos=tifLeftLight.getPos())
         
+    def update(self, task):
+        """update
+        parameters:
+            self
+        returns:
+            none
+        Description:
+            Game Loop
+        """
+        dt = globalClock.getDt()
+        # Update the spawners
+        for i in self.aTrapSpawn:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.trap1Collide(contacts,self.mover)
+        for i in self.bTrapSpawn:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.trap2Collide(contacts,self.mover)
+        for i in self.ammoSpawn:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.ammoCollide(contacts,self.mover)
+        # update the traps and projectiles
+        for i in human.floatTrap.traps:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.check(contacts,self.mover,self.players)
+        for i in human.clawTrap.traps:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.check(contacts,self.mover,self.players)
+        for i in Projectile.projectiles:
+            contacts = self.world.contactTest(i.sphere).getContacts()
+            if len(contacts)>0:
+                i.check(contacts,self.mover,self.players)
+        # step forward the physics simulation
+        self.world.doPhysics(dt,1)
+        
+        return task.cont
 
 world = World()
 run()

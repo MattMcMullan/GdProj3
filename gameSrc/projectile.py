@@ -69,15 +69,14 @@ class Projectile():
         self.parent.projectiles.remove(self)
         self.world.removeGhost(self.sphere)
         Projectile.projectiles.remove(self)
-    def check(self,human,players):
-        contacts = self.world.contactTest(self.sphere).getContacts()
+    def check(self,contacts,human,players):
         if len(contacts)==0:
             return
         contactObject = contacts[0].getNode0()
         if contacts[0].getNode0().getName()=="TrapSphere":
             contactObject = contacts[0].getNode1()
         name = contactObject.getName()
-        
+        print name
         if name==human.character.getName():
             human.impact(self.vel)
             self.kill()
